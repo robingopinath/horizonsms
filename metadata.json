@@ -1,0 +1,6 @@
+{
+  "name": "Horizon Tech Play School Management",
+  "description": "Comprehensive SaaS Full-Stack School Management System for Day-Care, Pre-Nursery, Nursery, LKG and UKG with automated role access, attendance warnings, and weighted report cards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
