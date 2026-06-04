@@ -1,0 +1,13 @@
+{
+  "students": [],
+  "staff": [],
+  "billing": [],
+  "payroll": [],
+  "grades": [],
+  "homework": [],
+  "attendanceRecords": [],
+  "globalWeights": {
+    "homeworkWeight": 30,
+    "examWeight": 70
+  }
+}
