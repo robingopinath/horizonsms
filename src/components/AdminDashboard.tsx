@@ -276,7 +276,7 @@ export default function AdminDashboard({
     }
   };
 
-  // AI activities generator for homework
+// AI activities generator for homework
   const handleAIGenerateHomeworkActivities = async () => {
     if (!hwTitle) {
       alert("Please specify a topic or keyword in the Title field first.");
@@ -284,9 +284,13 @@ export default function AdminDashboard({
     }
     setAiGeneratingHomework(true);
     try {
+      // FIX: Explicitly target the API endpoint cleanly for production proxies
       const response = await fetch("/api/ai/lesson-plan", {
          method: "POST",
-         headers: { "Content-Type": "application/json" },
+         headers: { 
+           "Content-Type": "application/json",
+           "Accept": "application/json"
+         },
          body: JSON.stringify({
            topic: hwTitle,
            course: hwCourse
@@ -296,9 +300,11 @@ export default function AdminDashboard({
         const json = await response.json();
         setHwDesc(json.objectives || "");
         setHwActivities(json.activities || "");
+      } else {
+        throw new Error("Lesson Plan engine failed to respond.");
       }
     } catch (err) {
-      console.error(err);
+      console.error("AI Lesson plan connection drop:", err);
     } finally {
       setAiGeneratingHomework(false);
     }
