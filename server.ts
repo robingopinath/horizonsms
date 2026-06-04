@@ -1119,3 +1119,12 @@ startServer();
 
 export { app };
 export default app;
+// Only run the local port if NOT on Vercel
+if (!process.env.VERCEL) {
+  app.listen(3000, () => {
+    console.log("Running locally!");
+  });
+}
+
+// Crucial for Vercel to see the server
+export default app;
