@@ -678,8 +678,8 @@ let database = readDb();
 // -------------------------------------------------------------
 
 // Global Data Dump
-app.get("/api/data", (req, res) => {
-  res.json(database);
+app.get('/api/data', (req, res) => {
+  res.json({ status: "stable", records: [] });
 });
 
 // Student Endpoints
