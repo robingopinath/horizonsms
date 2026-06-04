@@ -188,7 +188,7 @@ export default function AdminDashboard({
     window.print();
   };
 
-  // Trigger AI comments on student grade cards
+ // Trigger AI comments on student grade cards
   const handleAIGenerateGradeRemarks = async () => {
     const student = students.find(s => s.id === grStudentId);
     if (!student) {
@@ -197,9 +197,13 @@ export default function AdminDashboard({
     }
     setAiGeneratingRemarks(true);
     try {
+      // FIX: Ensure clean endpoint execution for Vercel functions
       const response = await fetch("/api/ai/remarks", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json" 
+        },
         body: JSON.stringify({
           name: student.name,
           course: student.course,
@@ -211,9 +215,12 @@ export default function AdminDashboard({
       if (response.ok) {
         const json = await response.json();
         setGrRemarks(json.remarks || "");
+      } else {
+        throw new Error("Smart Core Server Engine rejected request.");
       }
     } catch (err) {
-      console.error(err);
+      console.error("AI Remarks generation link severed:", err);
+      alert("Failed to reach NextGen AI engine. Re-verifying cloud gateways...");
     } finally {
       setAiGeneratingRemarks(false);
     }
