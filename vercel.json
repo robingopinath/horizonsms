@@ -2,6 +2,7 @@
   "version": 2,
   "cleanUrls": true,
   "trailingSlash": false,
+  "regions": ["bom1"],
   "rewrites": [
     {
       "source": "/api/(.*)",
