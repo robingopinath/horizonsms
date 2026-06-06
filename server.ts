@@ -52,6 +52,43 @@ if (!apiKey) {
 }
 
 app.use(express.json());
+
+// Intercept wildcard or relative calls to logos from nested routes to guarantee server delivery
+app.get("*", (req, res, next) => {
+  const lowerPath = req.path.toLowerCase();
+  if (
+    lowerPath.endsWith("arivu_logo.png") ||
+    lowerPath.endsWith("horizon_logo.png") ||
+    lowerPath.endsWith("nextgen_logo.png") ||
+    lowerPath.endsWith("arivu_logo.svg")
+  ) {
+    const fileName = req.path.split("/").pop();
+    if (fileName) {
+      let targetName = fileName;
+      const lowerFile = fileName.toLowerCase();
+      if (lowerFile === "horizon_logo.png") {
+        targetName = "horizon_logo.png";
+      } else if (lowerFile === "arivu_logo.png") {
+        targetName = "arivu_logo.png";
+      } else if (lowerFile === "nextgen_logo.png") {
+        targetName = "nextgen_logo.png";
+      } else if (lowerFile === "arivu_logo.svg") {
+        targetName = "arivu_logo.svg";
+      }
+      
+      const filePath = path.join(process.cwd(), "public", targetName);
+      if (fs.existsSync(filePath)) {
+        return res.sendFile(filePath);
+      }
+      const rootPath = path.join(process.cwd(), targetName);
+      if (fs.existsSync(rootPath)) {
+        return res.sendFile(rootPath);
+      }
+    }
+  }
+  next();
+});
+
 app.use(express.static(path.join(process.cwd(), "public")));
 app.use("/public", express.static(path.join(process.cwd(), "public")));
 
@@ -305,13 +342,13 @@ const initialDbData = {
   staff: [
     {
       id: "stf_1",
-      name: "Robin T.G.",
+      name: "Vidyasagar",
       role: "Admin",
-      specialization: "General Director & Principal",
-      email: "robintg@gmail.com",
-      phone: "+91 7353101553",
-      salary: 85000,
-      joiningDate: "2020-04-01",
+      specialization: "Managing Director & Curriculum Head",
+      email: "vidyasagarpcg@gmail.com",
+      phone: "+917353101553",
+      salary: 50000,
+      joiningDate: "2026-06-05",
       status: "Active"
     },
     {
@@ -678,8 +715,8 @@ let database = readDb();
 // -------------------------------------------------------------
 
 // Global Data Dump
-app.get('/api/data', (req, res) => {
-  res.json({ status: "stable", records: [] });
+app.get("/api/data", (req, res) => {
+  res.json(database);
 });
 
 // Student Endpoints
@@ -1007,6 +1044,53 @@ app.delete("/api/homework/:id", (req, res) => {
   res.json({ success: true });
 });
 
+// Exam Schedules Endpoints
+app.post("/api/exams", (req, res) => {
+  const { title, course, subject, examDate, examTime, maxMarks, syllabus, academicTerm, status } = req.body;
+  if (!database.exams) {
+    database.exams = [];
+  }
+  const newExam = {
+    id: "ex_" + Date.now(),
+    title,
+    course,
+    subject,
+    examDate: examDate || new Date().toISOString().split("T")[0],
+    examTime: examTime || "09:00 AM",
+    maxMarks: parseInt(maxMarks) || 50,
+    syllabus: syllabus || "",
+    academicTerm: academicTerm || "Term 1",
+    status: status || "Scheduled"
+  };
+  database.exams.push(newExam);
+  writeDb(database);
+  res.status(201).json(newExam);
+});
+
+app.put("/api/exams/:id", (req, res) => {
+  const { id } = req.params;
+  if (!database.exams) {
+    database.exams = [];
+  }
+  const idx = database.exams.findIndex((e: any) => e.id === id);
+  if (idx !== -1) {
+    database.exams[idx] = { ...database.exams[idx], ...req.body };
+    writeDb(database);
+    res.json(database.exams[idx]);
+  } else {
+    res.status(404).json({ error: "Exam schedule record not found" });
+  }
+});
+
+app.delete("/api/exams/:id", (req, res) => {
+  const { id } = req.params;
+  if (database.exams) {
+    database.exams = database.exams.filter((e: any) => e.id !== id);
+    writeDb(database);
+  }
+  res.json({ success: true });
+});
+
 // -------------------------------------------------------------
 // Server-Side Gemini AI Assistive Features
 // -------------------------------------------------------------
@@ -1089,11 +1173,6 @@ Ensure the tone is playful, colorful, and fully suitable for kids aged 2 to 6. K
 // -------------------------------------------------------------
 
 async function startServer() {
-  if (process.env.VERCEL) {
-    console.log("🟢 [VERCEL]: Running inside Vercel Serverless environment. Express app exported successfully.");
-    return;
-  }
-
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
       server: { middlewareMode: true },
@@ -1116,15 +1195,3 @@ async function startServer() {
 }
 
 startServer();
-
-export { app };
-export default app;
-// Only run the local port if NOT on Vercel
-if (!process.env.VERCEL) {
-  app.listen(3000, () => {
-    console.log("Running locally!");
-  });
-}
-
-// Crucial for Vercel to see the server
-export default app;

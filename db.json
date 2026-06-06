@@ -1,13 +1,849 @@
 {
-  "students": [],
-  "staff": [],
-  "billing": [],
-  "payroll": [],
-  "grades": [],
-  "homework": [],
-  "attendanceRecords": [],
+  "students": [
+    {
+      "id": "std_1",
+      "name": "Aarav Malhotra",
+      "course": "Day-Care",
+      "rollNo": "DC-2026-001",
+      "age": 2,
+      "gender": "Male",
+      "fatherName": "Rajesh Malhotra",
+      "motherName": "Priyanka Malhotra",
+      "contactPhone": "+91 9845012345",
+      "email": "rajesh.malhotra@gmail.com",
+      "address": "Flat 202, Sunshine Apartments, Thirumalapura, Bengaluru",
+      "status": "Active",
+      "enrollmentDate": "2026-01-10",
+      "avatarSeed": "std1",
+      "parentPassword": "parent123"
+    },
+    {
+      "id": "std_2",
+      "name": "Mira Patel",
+      "course": "Day-Care",
+      "rollNo": "DC-2026-002",
+      "age": 3,
+      "gender": "Female",
+      "fatherName": "Siddharth Patel",
+      "motherName": "Megha Patel",
+      "contactPhone": "+91 9900112233",
+      "email": "sid.patel@yahoo.com",
+      "address": "No 18, 3rd Main, Malleshwaram, Bengaluru",
+      "status": "Active",
+      "enrollmentDate": "2026-02-15",
+      "avatarSeed": "std2",
+      "parentPassword": "parent123"
+    },
+    {
+      "id": "std_3",
+      "name": "Aanya Sharma",
+      "course": "Pre-Nursery",
+      "rollNo": "PN-2026-010",
+      "age": 3,
+      "gender": "Female",
+      "fatherName": "Amit Sharma",
+      "motherName": "Kiran Sharma",
+      "contactPhone": "+91 8884442211",
+      "email": "amit.sharma@outlook.com",
+      "address": "Nester Raga, Mahadevapura, Bengaluru",
+      "status": "Active",
+      "enrollmentDate": "2026-01-20",
+      "avatarSeed": "std3",
+      "parentPassword": "parent123"
+    },
+    {
+      "id": "std_4",
+      "name": "Kabir Singh",
+      "course": "Pre-Nursery",
+      "rollNo": "PN-2026-011",
+      "age": 3,
+      "gender": "Male",
+      "fatherName": "Gurpreet Singh",
+      "motherName": "Jasmeet Kaur",
+      "contactPhone": "+91 7406112233",
+      "email": "singh.gurpreet@gmail.com",
+      "address": "Prestige Shantiniketan, Whitefield, Bengaluru",
+      "status": "Active",
+      "enrollmentDate": "2026-03-01",
+      "avatarSeed": "std4",
+      "parentPassword": "parent123"
+    },
+    {
+      "id": "std_5",
+      "name": "Ishaan Iyer",
+      "course": "Nursery",
+      "rollNo": "NS-2026-020",
+      "age": 4,
+      "gender": "Male",
+      "fatherName": "Harihara Iyer",
+      "motherName": "Janaki Iyer",
+      "contactPhone": "+91 9123456789",
+      "email": "hari.iyer@live.com",
+      "address": "10th Main Road, Jayanagar, Bengaluru",
+      "status": "Active",
+      "enrollmentDate": "2025-11-15",
+      "avatarSeed": "std5",
+      "parentPassword": "parent123"
+    },
+    {
+      "id": "std_6",
+      "name": "Reyansh Rao",
+      "course": "Nursery",
+      "rollNo": "NS-2026-021",
+      "age": 4,
+      "gender": "Male",
+      "fatherName": "Prashant Rao",
+      "motherName": "Divya Rao",
+      "contactPhone": "+91 9880022311",
+      "email": "prashrao@gmail.com",
+      "address": "SLV Layout, Thirumalapura, Bengaluru",
+      "status": "Active",
+      "enrollmentDate": "2025-12-05",
+      "avatarSeed": "std6",
+      "parentPassword": "parent123"
+    },
+    {
+      "id": "std_7",
+      "name": "Diya Joshi",
+      "course": "Nursery",
+      "rollNo": "NS-2026-022",
+      "age": 4,
+      "gender": "Female",
+      "fatherName": "Sandeep Joshi",
+      "motherName": "Pooja Joshi",
+      "contactPhone": "+91 8095112244",
+      "email": "sandeep.joshi@gmail.com",
+      "address": "Greenwood Residency, Sarjapur Road, Bengaluru",
+      "status": "Active",
+      "enrollmentDate": "2026-01-05",
+      "avatarSeed": "std7",
+      "parentPassword": "parent123"
+    },
+    {
+      "id": "std_8",
+      "name": "Rohan Sen",
+      "course": "LKG",
+      "rollNo": "LK-2026-031",
+      "age": 5,
+      "gender": "Male",
+      "fatherName": "Soumitra Sen",
+      "motherName": "Rimi Sen",
+      "contactPhone": "+91 9741005533",
+      "email": "soumitra.sen@gmail.com",
+      "address": "Sobha Amber, Thirumalapura Road, Bengaluru",
+      "status": "Active",
+      "enrollmentDate": "2025-05-12",
+      "avatarSeed": "std8",
+      "parentPassword": "parent123"
+    },
+    {
+      "id": "std_9",
+      "name": "Avani Nair",
+      "course": "LKG",
+      "rollNo": "LK-2026-032",
+      "age": 4,
+      "gender": "Female",
+      "fatherName": "Girish Nair",
+      "motherName": "Anu Nair",
+      "contactPhone": "+91 8234567890",
+      "email": "girish.nair@hotmail.com",
+      "address": "RMV 2nd Stage, Sanjaynagar, Bengaluru",
+      "status": "Active",
+      "enrollmentDate": "2025-05-20",
+      "avatarSeed": "std9",
+      "parentPassword": "parent123"
+    },
+    {
+      "id": "std_10",
+      "name": "Vihaan Desai",
+      "course": "LKG",
+      "rollNo": "LK-2026-033",
+      "age": 5,
+      "gender": "Male",
+      "fatherName": "Manoj Desai",
+      "motherName": "Sneha Desai",
+      "contactPhone": "+91 9844123456",
+      "email": "manoj.desai@gmail.com",
+      "address": "Chikkabanavara, Bengaluru North, Karnataka",
+      "status": "Active",
+      "enrollmentDate": "2025-06-01",
+      "avatarSeed": "std10",
+      "parentPassword": "parent123"
+    },
+    {
+      "id": "std_11",
+      "name": "Prisha Reddy",
+      "course": "LKG",
+      "rollNo": "LK-2026-034",
+      "age": 5,
+      "gender": "Female",
+      "fatherName": "Venkat Reddy",
+      "motherName": "Madhavi Reddy",
+      "contactPhone": "+91 7353101889",
+      "email": "venkat.reddy@gmail.com",
+      "address": "No 12, Sri Veeranjaneya Temple Road, Thirumalapura, Bengaluru",
+      "status": "Active",
+      "enrollmentDate": "2025-05-15",
+      "avatarSeed": "std11",
+      "parentPassword": "parent123"
+    },
+    {
+      "id": "std_12",
+      "name": "Aditya Bhat",
+      "course": "UKG",
+      "rollNo": "UK-2026-041",
+      "age": 5,
+      "gender": "Male",
+      "fatherName": "Narasimha Bhat",
+      "motherName": "Shilpa Bhat",
+      "contactPhone": "+91 9341122345",
+      "email": "bhat.narasimha@gmail.com",
+      "address": "Vidyaranyapura, Bengaluru, Karnataka",
+      "status": "Active",
+      "enrollmentDate": "2024-05-10",
+      "avatarSeed": "std12",
+      "parentPassword": "parent123"
+    },
+    {
+      "id": "std_13",
+      "name": "Samantha Fernandes",
+      "course": "UKG",
+      "rollNo": "UK-2026-042",
+      "age": 6,
+      "gender": "Female",
+      "fatherName": "Keith Fernandes",
+      "motherName": "Maria Fernandes",
+      "contactPhone": "+91 7353101553",
+      "email": "keith.ferns@gmail.com",
+      "address": "Kothanur, Hennur Road, Bengaluru",
+      "status": "Active",
+      "enrollmentDate": "2024-05-12",
+      "avatarSeed": "std13",
+      "parentPassword": "parent123"
+    },
+    {
+      "id": "std_14",
+      "name": "Sai Krishna",
+      "course": "UKG",
+      "rollNo": "UK-2026-043",
+      "age": 5,
+      "gender": "Male",
+      "fatherName": "Gopal Krishna",
+      "motherName": "Vasundhara",
+      "contactPhone": "+91 9448001122",
+      "email": "gopal.k@gmail.com",
+      "address": "Vrindavan Gardens, Thirumalapura Road, Bengaluru",
+      "status": "Active",
+      "enrollmentDate": "2024-05-18",
+      "avatarSeed": "std14",
+      "parentPassword": "parent123"
+    },
+    {
+      "id": "std_15",
+      "name": "Kiara Hegde",
+      "course": "UKG",
+      "rollNo": "UK-2026-044",
+      "age": 6,
+      "gender": "Female",
+      "fatherName": "Mohan Hegde",
+      "motherName": "Rupa Hegde",
+      "contactPhone": "+91 7022011022",
+      "email": "mohanhegde@gmail.com",
+      "address": "Salarpuria Greenage, Bommanahalli, Bengaluru",
+      "status": "Active",
+      "enrollmentDate": "2024-06-02",
+      "avatarSeed": "std15",
+      "parentPassword": "parent123"
+    }
+  ],
+  "staff": [
+    {
+      "id": "stf_2",
+      "name": "Mrs. Preeti Sharma",
+      "role": "Staff",
+      "specialization": "Day-Care & Pre-Nursery Head",
+      "email": "preeti@gmail.com",
+      "phone": "+91 7353001122",
+      "salary": 32000,
+      "joiningDate": "2022-06-15",
+      "status": "Active"
+    },
+    {
+      "id": "stf_3",
+      "name": "Miss Sandra Fernandez",
+      "role": "Staff",
+      "specialization": "Nursery & LKG Educator",
+      "email": "sandra@gmail.com",
+      "phone": "+91 9845012211",
+      "salary": 34000,
+      "joiningDate": "2021-08-01",
+      "status": "Active"
+    },
+    {
+      "id": "stf_4",
+      "name": "Miss Shalini Gowda",
+      "role": "Staff",
+      "specialization": "UKG Class Teacher",
+      "email": "shalini@gmail.com",
+      "phone": "+91 9008811223",
+      "salary": 35000,
+      "joiningDate": "2023-01-10",
+      "status": "Active"
+    },
+    {
+      "id": "stf_5",
+      "name": "Mr. Ramesh Kumar",
+      "role": "Accountant",
+      "specialization": "Senior billing & Payroll Lead",
+      "email": "ramesh@gmail.com",
+      "phone": "+91 7353101224",
+      "salary": 40000,
+      "joiningDate": "2021-02-15",
+      "status": "Active"
+    },
+    {
+      "id": "stf_6",
+      "name": "Darshini N",
+      "role": "Management",
+      "specialization": "Founder CEO and Creative Head",
+      "email": "darshinin@gmail.com",
+      "phone": "+91 7353190351",
+      "salary": 80000,
+      "joiningDate": "2025-12-01",
+      "status": "Active"
+    },
+    {
+      "name": "Vidyasagar",
+      "role": "Admin",
+      "specialization": "Managing Director & Curriculum Head",
+      "email": "vidyasagarpcg@gmail.com",
+      "phone": "+917353101553",
+      "salary": 50000,
+      "joiningDate": "2026-06-05",
+      "status": "Active",
+      "id": "stf_1780664660918"
+    }
+  ],
+  "attendance": [
+    {
+      "id": "att_1",
+      "date": "2026-06-02",
+      "targetId": "std_1",
+      "targetType": "student",
+      "status": "Present",
+      "markedBy": "Mrs. Preeti Sharma",
+      "smsTriggered": true
+    },
+    {
+      "id": "att_2",
+      "date": "2026-06-02",
+      "targetId": "std_2",
+      "targetType": "student",
+      "status": "Present",
+      "markedBy": "Mrs. Preeti Sharma",
+      "smsTriggered": true
+    },
+    {
+      "id": "att_3",
+      "date": "2026-06-02",
+      "targetId": "std_3",
+      "targetType": "student",
+      "status": "Absent",
+      "markedBy": "Mrs. Preeti Sharma",
+      "smsTriggered": true
+    },
+    {
+      "id": "att_4",
+      "date": "2026-06-02",
+      "targetId": "std_4",
+      "targetType": "student",
+      "status": "Present",
+      "markedBy": "Mrs. Preeti Sharma",
+      "smsTriggered": true
+    },
+    {
+      "id": "att_5",
+      "date": "2026-06-02",
+      "targetId": "std_5",
+      "targetType": "student",
+      "status": "Present",
+      "markedBy": "Miss Sandra Fernandez",
+      "smsTriggered": true
+    },
+    {
+      "id": "att_6",
+      "date": "2026-06-02",
+      "targetId": "std_6",
+      "targetType": "student",
+      "status": "Present",
+      "markedBy": "Miss Sandra Fernandez",
+      "smsTriggered": true
+    },
+    {
+      "id": "att_7",
+      "date": "2026-06-02",
+      "targetId": "std_7",
+      "targetType": "student",
+      "status": "Late",
+      "markedBy": "Miss Sandra Fernandez",
+      "smsTriggered": true
+    },
+    {
+      "id": "att_8",
+      "date": "2026-06-02",
+      "targetId": "std_8",
+      "targetType": "student",
+      "status": "Present",
+      "markedBy": "Miss Sandra Fernandez",
+      "smsTriggered": true
+    },
+    {
+      "id": "att_9",
+      "date": "2026-06-02",
+      "targetId": "std_9",
+      "targetType": "student",
+      "status": "Present",
+      "markedBy": "Miss Sandra Fernandez",
+      "smsTriggered": true
+    },
+    {
+      "id": "att_10",
+      "date": "2026-06-02",
+      "targetId": "std_10",
+      "targetType": "student",
+      "status": "Absent",
+      "markedBy": "Miss Sandra Fernandez",
+      "smsTriggered": true
+    },
+    {
+      "id": "att_11",
+      "date": "2026-06-02",
+      "targetId": "std_11",
+      "targetType": "student",
+      "status": "Present",
+      "markedBy": "Miss Sandra Fernandez",
+      "smsTriggered": true
+    },
+    {
+      "id": "att_12",
+      "date": "2026-06-02",
+      "targetId": "std_12",
+      "targetType": "student",
+      "status": "Present",
+      "markedBy": "Miss Shalini Gowda",
+      "smsTriggered": true
+    },
+    {
+      "id": "att_13",
+      "date": "2026-06-02",
+      "targetId": "std_13",
+      "targetType": "student",
+      "status": "Present",
+      "markedBy": "Miss Shalini Gowda",
+      "smsTriggered": true
+    },
+    {
+      "id": "att_14",
+      "date": "2026-06-02",
+      "targetId": "std_14",
+      "targetType": "student",
+      "status": "Absent",
+      "markedBy": "Miss Shalini Gowda",
+      "smsTriggered": true
+    },
+    {
+      "id": "att_15",
+      "date": "2026-06-02",
+      "targetId": "std_15",
+      "targetType": "student",
+      "status": "Present",
+      "markedBy": "Miss Shalini Gowda",
+      "smsTriggered": true
+    },
+    {
+      "id": "att_16",
+      "date": "2026-06-02",
+      "targetId": "stf_1",
+      "targetType": "staff",
+      "status": "Present",
+      "markedBy": "Auto-System",
+      "smsTriggered": false
+    },
+    {
+      "id": "att_17",
+      "date": "2026-06-02",
+      "targetId": "stf_2",
+      "targetType": "staff",
+      "status": "Present",
+      "markedBy": "Auto-System",
+      "smsTriggered": false
+    },
+    {
+      "id": "att_18",
+      "date": "2026-06-02",
+      "targetId": "stf_3",
+      "targetType": "staff",
+      "status": "Present",
+      "markedBy": "Auto-System",
+      "smsTriggered": false
+    },
+    {
+      "id": "att_19",
+      "date": "2026-06-02",
+      "targetId": "stf_4",
+      "targetType": "staff",
+      "status": "Present",
+      "markedBy": "Auto-System",
+      "smsTriggered": false
+    },
+    {
+      "id": "att_1780663635367",
+      "targetId": "stf_1",
+      "targetType": "staff",
+      "date": "2026-06-05",
+      "status": "Present",
+      "markedBy": "Administrator Principal",
+      "smsTriggered": true
+    }
+  ],
+  "grades": [
+    {
+      "id": "grd_1",
+      "studentId": "std_12",
+      "course": "UKG",
+      "academicTerm": "Term 1",
+      "subject": "Phonics & Alphabets",
+      "homeworkScore": 92,
+      "examScore": 88,
+      "weightedTotal": 89.2,
+      "letterGrade": "A",
+      "remarks": "Aditya has excellent grasp of phonics sounds. Speaks clearly.",
+      "markedBy": "Miss Shalini Gowda"
+    },
+    {
+      "id": "grd_2",
+      "studentId": "std_12",
+      "course": "UKG",
+      "academicTerm": "Term 1",
+      "subject": "EVS (Our Surroundings)",
+      "homeworkScore": 85,
+      "examScore": 90,
+      "weightedTotal": 88.5,
+      "letterGrade": "A",
+      "remarks": "Identifies trees and animals quickly. Energetic in class.",
+      "markedBy": "Miss Shalini Gowda"
+    },
+    {
+      "id": "grd_3",
+      "studentId": "std_13",
+      "course": "UKG",
+      "academicTerm": "Term 1",
+      "subject": "Phonics & Alphabets",
+      "homeworkScore": 98,
+      "examScore": 95,
+      "weightedTotal": 95.9,
+      "letterGrade": "A+",
+      "remarks": "Outstanding spelling ability and expressive reading.",
+      "markedBy": "Miss Shalini Gowda"
+    },
+    {
+      "id": "grd_4",
+      "studentId": "std_13",
+      "course": "UKG",
+      "academicTerm": "Term 1",
+      "subject": "Maths (Counting & Shapes)",
+      "homeworkScore": 95,
+      "examScore": 100,
+      "weightedTotal": 98.5,
+      "letterGrade": "A+",
+      "remarks": "Perfect scores in basic additions and shapes drawing.",
+      "markedBy": "Miss Shalini Gowda"
+    },
+    {
+      "id": "grd_5",
+      "studentId": "std_8",
+      "course": "LKG",
+      "academicTerm": "Term 1",
+      "subject": "Rhymes & Vocal",
+      "homeworkScore": 78,
+      "examScore": 82,
+      "weightedTotal": 80.8,
+      "letterGrade": "B",
+      "remarks": "Rohan knows the nursery rhymes but is sometimes shy to sing aloud.",
+      "markedBy": "Miss Sandra Fernandez"
+    },
+    {
+      "id": "grd_6",
+      "studentId": "std_11",
+      "course": "LKG",
+      "academicTerm": "Term 1",
+      "subject": "Motor Skills (Coloring)",
+      "homeworkScore": 88,
+      "examScore": 94,
+      "weightedTotal": 92.2,
+      "letterGrade": "A+",
+      "remarks": "Beautiful, neat coloring. Colors inside borders perfectly.",
+      "markedBy": "Miss Sandra Fernandez"
+    }
+  ],
+  "billing": [
+    {
+      "id": "inv_1",
+      "studentId": "std_1",
+      "course": "Day-Care",
+      "term": "Quarterly Session (Jun-Aug)",
+      "dueDate": "2026-06-15",
+      "paidDate": "2026-06-01",
+      "items": [
+        {
+          "description": "Day-Care Monthly Fees (June)",
+          "amount": 12000
+        },
+        {
+          "description": "Nutritional Diet & Snacks Plan",
+          "amount": 3500
+        },
+        {
+          "description": "Admission Kit & Soft Toys Fee",
+          "amount": 2000
+        }
+      ],
+      "totalAmount": 17500,
+      "status": "Paid",
+      "stripePaymentIntentId": "ch_stripe_sim_9102"
+    },
+    {
+      "id": "inv_2",
+      "studentId": "std_12",
+      "course": "UKG",
+      "term": "First Term Fees 2026",
+      "dueDate": "2026-06-10",
+      "items": [
+        {
+          "description": "UKG Half-Yearly Tuition Charges",
+          "amount": 18000
+        },
+        {
+          "description": "Smart Tech Interactive Lab",
+          "amount": 4000
+        },
+        {
+          "description": "Play-Way Activity Material Kit",
+          "amount": 3000
+        }
+      ],
+      "totalAmount": 25000,
+      "status": "Unpaid"
+    },
+    {
+      "id": "inv_3",
+      "studentId": "std_5",
+      "course": "Nursery",
+      "term": "First Term Fees 2026",
+      "dueDate": "2026-06-10",
+      "items": [
+        {
+          "description": "Nursery Half-Yearly Tuition Charges",
+          "amount": 16000
+        },
+        {
+          "description": "Aesthetic Crafts & Clay materials",
+          "amount": 3000
+        },
+        {
+          "description": "Mid-day Fruit Snacks Program",
+          "amount": 2500
+        }
+      ],
+      "totalAmount": 21500,
+      "status": "Unpaid"
+    },
+    {
+      "id": "inv_4",
+      "studentId": "std_3",
+      "course": "Pre-Nursery",
+      "term": "First Term Fees 2026",
+      "dueDate": "2026-06-08",
+      "paidDate": "2026-05-28",
+      "items": [
+        {
+          "description": "Pre-Nursery Term Fee",
+          "amount": 15000
+        },
+        {
+          "description": "Activity Hub Subscription",
+          "amount": 2500
+        }
+      ],
+      "totalAmount": 17500,
+      "status": "Paid",
+      "stripePaymentIntentId": "ch_stripe_sim_4401"
+    },
+    {
+      "id": "inv_1780661651864",
+      "studentId": "std_1",
+      "course": "Day-Care",
+      "term": "First Term Fees 2026",
+      "dueDate": "2026-06-20",
+      "items": [
+        {
+          "description": "Term Tuition Fee",
+          "amount": 15000
+        },
+        {
+          "description": "Smart Lab & Food Kits",
+          "amount": 5000
+        }
+      ],
+      "totalAmount": 20000,
+      "status": "Unpaid"
+    },
+    {
+      "id": "inv_1780661719980",
+      "studentId": "std_1",
+      "course": "Day-Care",
+      "term": "First Term Fees 2026",
+      "dueDate": "2026-06-20",
+      "items": [
+        {
+          "description": "Term Tuition Fee",
+          "amount": 15742
+        },
+        {
+          "description": "Smart Lab & Food Kits",
+          "amount": 5562
+        }
+      ],
+      "totalAmount": 21304,
+      "status": "Unpaid"
+    }
+  ],
+  "lessons": [
+    {
+      "id": "les_1",
+      "course": "Nursery",
+      "teacherId": "stf_3",
+      "teacherName": "Miss Sandra Fernandez",
+      "date": "2026-06-02",
+      "topic": "Introduction to Secondary Colours",
+      "objectives": "Teach children how mixing Red + Yellow makes Orange, and Blue + Yellow makes Green.",
+      "activities": "Hands-on water coloring with paper sheets. Handprint painting activity on the common board.",
+      "feedback": "All kids loved the color mixing. Reansh and Diya got orange quickly. Need extra paint sets next time."
+    },
+    {
+      "id": "les_2",
+      "course": "UKG",
+      "teacherId": "stf_4",
+      "teacherName": "Miss Shalini Gowda",
+      "date": "2026-06-02",
+      "topic": "Simple Double Letter Greetings",
+      "objectives": "Help child spell out conversational phrases like 'Good morning', 'Yes please', and 'Thank you'.",
+      "activities": "Roleplay in pairs of two. Interactive smartboard flashcard matching.",
+      "feedback": "Samantha played roleplay perfectly. Aditya is mixing thank you and please; will review in circle tomorrow."
+    }
+  ],
+  "homework": [
+    {
+      "id": "hw_1",
+      "course": "Nursery",
+      "title": "Handprint Painting and Leaf Trace",
+      "description": "Gather 3 fallen leaves of different shapes. Dip them in water color or stamp pads and trace them onto page 12 of your Art Journal, showing leaf patterns.",
+      "activities": "Sensory leaf textures search, garden walking, rhyme circle singing 'Five Little Leaves'.",
+      "date": "2026-06-02",
+      "dueDate": "2026-06-04",
+      "postedBy": "Miss Sandra Fernandez"
+    },
+    {
+      "id": "hw_2",
+      "course": "UKG",
+      "title": "Double Letter Spelled Greetings",
+      "description": "Draw or find three cutouts representing double-letter words like FEED, SEED, GOOD. Practice writing each word 5 times in the draft notebook.",
+      "activities": "Interactive alphabet blocks game, reading circle, conversational greetings roleplay.",
+      "date": "2026-06-02",
+      "dueDate": "2026-06-03",
+      "postedBy": "Miss Shalini Gowda"
+    }
+  ],
+  "payroll": [
+    {
+      "id": "pay_1",
+      "staffId": "stf_2",
+      "staffName": "Mrs. Preeti Sharma",
+      "role": "Staff",
+      "month": "May 2026",
+      "baseSalary": 32000,
+      "allowances": 3000,
+      "deductions": 500,
+      "netPayable": 34500,
+      "paidDate": "2026-05-31",
+      "status": "Paid"
+    },
+    {
+      "id": "pay_2",
+      "staffId": "stf_3",
+      "staffName": "Miss Sandra Fernandez",
+      "role": "Staff",
+      "month": "May 2026",
+      "baseSalary": 34000,
+      "allowances": 3000,
+      "deductions": 500,
+      "netPayable": 36500,
+      "paidDate": "2026-05-31",
+      "status": "Paid"
+    },
+    {
+      "id": "pay_3",
+      "staffId": "stf_4",
+      "staffName": "Miss Shalini Gowda",
+      "role": "Staff",
+      "month": "May 2026",
+      "baseSalary": 35000,
+      "allowances": 2500,
+      "deductions": 500,
+      "netPayable": 37000,
+      "status": "Pending"
+    }
+  ],
   "globalWeights": {
     "homeworkWeight": 30,
     "examWeight": 70
-  }
+  },
+  "exams": [
+    {
+      "id": "ex_1",
+      "title": "Term 1 Phonics Reading & Speaking Assessment",
+      "course": "Nursery",
+      "subject": "Phonics & Language",
+      "examDate": "2026-06-12",
+      "examTime": "09:30 AM",
+      "maxMarks": 50,
+      "syllabus": "Identify letters A to J, phonic pronunciation of short vowels, picture comprehension.",
+      "academicTerm": "Term 1",
+      "status": "Scheduled"
+    },
+    {
+      "id": "ex_2",
+      "title": "Middle Term Shape Matching & Counting",
+      "course": "LKG",
+      "subject": "Cognitive Tiers",
+      "examDate": "2026-06-15",
+      "examTime": "10:15 AM",
+      "maxMarks": 50,
+      "syllabus": "Assemble 3D geometrical blocks, identify pyramid/cube faces, counting play-seeds up to 15.",
+      "academicTerm": "Term 1",
+      "status": "Scheduled"
+    },
+    {
+      "id": "ex_3",
+      "title": "Color Blending & Art Journal Evaluation",
+      "course": "UKG",
+      "subject": "Drawing & Fine Motor",
+      "examDate": "2026-06-18",
+      "examTime": "11:00 AM",
+      "maxMarks": 100,
+      "syllabus": "Freehand tree painting using finger dabs, mixing secondary colors, tracing fine curved patterns.",
+      "academicTerm": "Term 1",
+      "status": "Scheduled"
+    }
+  ]
 }

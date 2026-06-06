@@ -9,6 +9,7 @@ import { motion } from "motion/react";
 import { Student, StaffMember, Invoice, PayrollRecord, CourseType, GradeItem, HomeworkRecord } from "../types";
 import { Users, CreditCard, Shield, Plus, Edit3, Trash2, Check, UserPlus, DollarSign, Calendar, Settings, FileText, CheckCircle, Printer, Search, Receipt, GraduationCap, BookOpen, Award, Sparkles, KeyRound, AlertTriangle, AlertCircle, TrendingUp, Bell } from "lucide-react";
 import HorizonLogo from "./HorizonLogo";
+import ArivuLogo from "./ArivuLogo";
 
 const getRollPrefix = (course: CourseType): string => {
   switch (course) {
@@ -102,7 +103,7 @@ export default function AdminDashboard({
     gender: "Male",
     fatherName: "",
     motherName: "",
-    contactPhone: "",
+    contactPhone: "+91",
     email: "",
     address: "",
     status: "Active" as const,
@@ -118,11 +119,43 @@ export default function AdminDashboard({
     role: "Staff" as const,
     specialization: "",
     email: "",
-    phone: "",
+    phone: "+91",
     salary: 25000,
     joiningDate: currentDateStr,
     status: "Active" as const
   });
+
+  // Staff Editing state
+  const [showEditStaffModal, setShowEditStaffModal] = useState(false);
+  const [editingStaff, setEditingStaff] = useState<any | null>(null);
+
+  // State hooks for inline delete confirmations (immune to iframe alert/confirm sandboxing)
+  const [confirmDeleteStaffId, setConfirmDeleteStaffId] = useState<string | null>(null);
+  const [confirmDeleteStudentId, setConfirmDeleteStudentId] = useState<string | null>(null);
+  const [confirmDeletePayrollId, setConfirmDeletePayrollId] = useState<string | null>(null);
+  const [confirmDeleteHomeworkId, setConfirmDeleteHomeworkId] = useState<string | null>(null);
+
+  // Helper to enforce phone number inputs start with "+91", and accept only digits
+  const formatPhoneInput = (value: string): string => {
+    // If empty or falsy, default to "+91"
+    if (!value) return "+91";
+    let clean = value;
+    if (!clean.startsWith("+")) {
+      clean = "+" + clean.replace(/\D/g, "");
+    } else {
+      clean = "+" + clean.substring(1).replace(/\D/g, "");
+    }
+    
+    // Ensure starts with "+91"
+    if (!clean.startsWith("+91")) {
+      if (clean.length < 4) {
+        return "+91";
+      } else {
+        return "+91" + clean.replace(/\D/g, "").substring(2);
+      }
+    }
+    return clean;
+  };
 
   // Config weights state
   const [hwWeight, setHwWeight] = useState(globalWeights.homeworkWeight);
@@ -188,7 +221,7 @@ export default function AdminDashboard({
     window.print();
   };
 
- // Trigger AI comments on student grade cards
+  // Trigger AI comments on student grade cards
   const handleAIGenerateGradeRemarks = async () => {
     const student = students.find(s => s.id === grStudentId);
     if (!student) {
@@ -197,13 +230,9 @@ export default function AdminDashboard({
     }
     setAiGeneratingRemarks(true);
     try {
-      // FIX: Ensure clean endpoint execution for Vercel functions
       const response = await fetch("/api/ai/remarks", {
         method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          "Accept": "application/json" 
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: student.name,
           course: student.course,
@@ -215,12 +244,9 @@ export default function AdminDashboard({
       if (response.ok) {
         const json = await response.json();
         setGrRemarks(json.remarks || "");
-      } else {
-        throw new Error("Smart Core Server Engine rejected request.");
       }
     } catch (err) {
-      console.error("AI Remarks generation link severed:", err);
-      alert("Failed to reach NextGen AI engine. Re-verifying cloud gateways...");
+      console.error(err);
     } finally {
       setAiGeneratingRemarks(false);
     }
@@ -276,7 +302,7 @@ export default function AdminDashboard({
     }
   };
 
-// AI activities generator for homework
+  // AI activities generator for homework
   const handleAIGenerateHomeworkActivities = async () => {
     if (!hwTitle) {
       alert("Please specify a topic or keyword in the Title field first.");
@@ -284,13 +310,9 @@ export default function AdminDashboard({
     }
     setAiGeneratingHomework(true);
     try {
-      // FIX: Explicitly target the API endpoint cleanly for production proxies
       const response = await fetch("/api/ai/lesson-plan", {
          method: "POST",
-         headers: { 
-           "Content-Type": "application/json",
-           "Accept": "application/json"
-         },
+         headers: { "Content-Type": "application/json" },
          body: JSON.stringify({
            topic: hwTitle,
            course: hwCourse
@@ -300,11 +322,9 @@ export default function AdminDashboard({
         const json = await response.json();
         setHwDesc(json.objectives || "");
         setHwActivities(json.activities || "");
-      } else {
-        throw new Error("Lesson Plan engine failed to respond.");
       }
     } catch (err) {
-      console.error("AI Lesson plan connection drop:", err);
+      console.error(err);
     } finally {
       setAiGeneratingHomework(false);
     }
@@ -361,7 +381,7 @@ export default function AdminDashboard({
         gender: "Male",
         fatherName: "",
         motherName: "",
-        contactPhone: "",
+        contactPhone: "+91",
         email: "",
         address: "",
         status: "Active",
@@ -390,12 +410,29 @@ export default function AdminDashboard({
         role: "Staff",
         specialization: "",
         email: "",
-        phone: "",
+        phone: "+91",
         salary: 25000,
         joiningDate: currentDateStr,
         status: "Active"
       });
       alert("New staff record enrolled in administration.");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Staff profile edit submission
+  const handleUpdateStaffSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingStaff || !editingStaff.name || !editingStaff.email) {
+      alert("Staff Member email and name required.");
+      return;
+    }
+    try {
+      await onUpdateStaff(editingStaff.id, editingStaff);
+      setShowEditStaffModal(false);
+      setEditingStaff(null);
+      alert("Staff member profile updated successfully.");
     } catch (err) {
       console.error(err);
     }
@@ -653,7 +690,7 @@ export default function AdminDashboard({
 
   const handleOpenEditParentsModal = (stud: Student) => {
     setEditingStudentForParents(stud);
-    setEditParentPhone(stud.contactPhone);
+    setEditParentPhone(formatPhoneInput(stud.contactPhone));
     setEditParentPassword(stud.parentPassword || "parent123");
     setEditFatherName(stud.fatherName || "");
     setEditMotherName(stud.motherName || "");
@@ -797,58 +834,90 @@ export default function AdminDashboard({
             {/* Quick Metrics Statistics Section */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               
-              <div className="bg-white rounded-[24px] border border-slate-100 p-5 shadow-3xs flex flex-col justify-between hover:shadow-2xs transition text-left">
-                <div className="flex justify-between items-center w-full">
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider select-none font-sans">Total Registers</span>
-                  <span className="p-1 px-2.5 rounded-full bg-indigo-50 text-indigo-700 text-[9px] font-black uppercase tracking-widest leading-none font-sans">Roster</span>
+              <div className="bg-white rounded-[24px] border border-slate-100 p-5 shadow-3xs flex flex-col justify-between hover:shadow-2xs transition text-left min-w-0 relative overflow-hidden">
+                {/* SVG Light Grid background */}
+                <svg className="absolute inset-0 w-full h-full opacity-[0.03] select-none pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <pattern id="admin-grid-1" width="10" height="10" patternUnits="userSpaceOnUse">
+                      <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#4F46E5" strokeWidth="1" />
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#admin-grid-1)" />
+                </svg>
+
+                <div className="flex justify-between items-center w-full min-w-0 relative z-10">
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider select-none font-sans truncate">Total Registers</span>
+                  <span className="p-1 px-2.5 rounded-full bg-indigo-50 text-indigo-700 text-[9px] font-black uppercase tracking-widest leading-none font-sans shrink-0">Roster</span>
                 </div>
-                <div className="flex items-baseline gap-1 mt-4">
-                  <span className="text-3xl font-black text-slate-800 tracking-tight">{stats.total}</span>
-                  <span className="text-xs text-indigo-500 font-black uppercase tracking-widest">Pupils</span>
+                <div className="flex items-baseline gap-1 mt-4 min-w-0 overflow-hidden relative z-10">
+                  <span className="text-lg sm:text-xl xl:text-2xl font-black text-slate-800 tracking-tight truncate" title={stats.total.toString()}>{stats.total}</span>
+                  <span className="text-[10px] text-indigo-500 font-black uppercase tracking-widest shrink-0">Pupils</span>
                 </div>
-                <div className="w-full h-1.5 bg-indigo-50 rounded-full mt-4 overflow-hidden select-none">
+                <div className="w-full h-1.5 bg-indigo-50 rounded-full mt-4 overflow-hidden select-none relative z-10">
                   <div className="h-full bg-gradient-to-r from-indigo-500 to-purple-500" style={{ width: "100%" }} />
                 </div>
               </div>
 
-              <div className="bg-white rounded-[24px] border border-slate-100 p-5 shadow-3xs flex flex-col justify-between hover:shadow-2xs transition text-left">
-                <div className="flex justify-between items-center w-full">
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider select-none font-sans">Active Status</span>
-                  <span className="p-1 px-2.5 rounded-full bg-emerald-50 text-emerald-700 text-[9px] font-black uppercase tracking-widest leading-none font-sans">Live</span>
+              <div className="bg-white rounded-[24px] border border-slate-100 p-5 shadow-3xs flex flex-col justify-between hover:shadow-2xs transition text-left min-w-0 relative overflow-hidden">
+                {/* SVG Subtle Waves background */}
+                <svg className="absolute inset-0 w-full h-full opacity-[0.04] select-none pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0 40 Q 40 20, 80 40 T 160 40 T 240 40" fill="none" stroke="#10B981" strokeWidth="1.5" />
+                  <path d="M0 48 Q 40 28, 80 48 T 160 48 T 240 48" fill="none" stroke="#10B981" strokeWidth="0.75" />
+                </svg>
+
+                <div className="flex justify-between items-center w-full min-w-0 relative z-10">
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider select-none font-sans truncate">Active Status</span>
+                  <span className="p-1 px-2.5 rounded-full bg-emerald-50 text-emerald-700 text-[9px] font-black uppercase tracking-widest leading-none font-sans shrink-0">Live</span>
                 </div>
-                <div className="flex items-baseline gap-1 mt-4">
-                  <span className="text-3xl font-black text-emerald-600 tracking-tight">{stats.active}</span>
-                  <span className="text-[11px] text-zinc-400 font-extrabold font-mono">({stats.total > 0 ? Math.round((stats.active/stats.total)*100) : 0}%)</span>
+                <div className="flex items-baseline gap-1 mt-4 min-w-0 overflow-hidden relative z-10">
+                  <span className="text-lg sm:text-xl xl:text-2xl font-black text-emerald-600 tracking-tight truncate" title={stats.active.toString()}>{stats.active}</span>
+                  <span className="text-[10px] text-zinc-400 font-extrabold font-mono shrink-0">({stats.total > 0 ? Math.round((stats.active/stats.total)*100) : 0}%)</span>
                 </div>
-                <div className="w-full h-1.5 bg-emerald-50 rounded-full mt-4 overflow-hidden select-none">
+                <div className="w-full h-1.5 bg-emerald-50 rounded-full mt-4 overflow-hidden select-none relative z-10">
                   <div className="h-full bg-gradient-to-r from-emerald-500 to-teal-500" style={{ width: `${stats.total > 0 ? (stats.active / stats.total) * 100 : 0}%` }} />
                 </div>
               </div>
 
-              <div className="bg-white rounded-[24px] border border-slate-100 p-5 shadow-3xs flex flex-col justify-between hover:shadow-2xs transition text-left">
-                <div className="flex justify-between items-center w-full">
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider font-sans select-none">Early Streams</span>
-                  <span className="p-1 px-2.5 rounded-full bg-violet-50 text-violet-700 text-[9px] font-black uppercase tracking-widest leading-none font-sans font-black">Toddlers</span>
+              <div className="bg-white rounded-[24px] border border-slate-100 p-5 shadow-3xs flex flex-col justify-between hover:shadow-2xs transition text-left min-w-0 relative overflow-hidden">
+                {/* SVG Concentric rings backdrop */}
+                <svg className="absolute inset-0 w-full h-full opacity-[0.03] select-none pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="100%" cy="100%" r="60" fill="none" stroke="#7C3AED" strokeWidth="1" />
+                  <circle cx="100%" cy="100%" r="40" fill="none" stroke="#7C3AED" strokeWidth="0.75" />
+                </svg>
+
+                <div className="flex justify-between items-center w-full min-w-0 relative z-10">
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider font-sans select-none truncate">Early Streams</span>
+                  <span className="p-1 px-2.5 rounded-full bg-violet-50 text-violet-700 text-[9px] font-black uppercase tracking-widest leading-none font-sans font-black shrink-0">Toddlers</span>
                 </div>
-                <div className="flex items-baseline gap-1 mt-4">
-                  <span className="text-3xl font-black tracking-tight" style={{ color: "#7C3AED" }}>{stats.nurseryNum + stats.daycareNum}</span>
-                  <span className="text-xs text-violet-400 font-extrabold uppercase tracking-wide">Nurs/DC</span>
+                <div className="flex items-baseline gap-1 mt-4 min-w-0 overflow-hidden relative z-10">
+                  <span className="text-lg sm:text-xl xl:text-2xl font-black tracking-tight truncate" style={{ color: "#7C3AED" }} title={(stats.nurseryNum + stats.daycareNum).toString()}>{stats.nurseryNum + stats.daycareNum}</span>
+                  <span className="text-[10px] text-violet-400 font-extrabold uppercase tracking-wide shrink-0">Nurs/DC</span>
                 </div>
-                <div className="w-full h-1.5 bg-violet-100/50 rounded-full mt-4 overflow-hidden select-none">
+                <div className="w-full h-1.5 bg-violet-100/50 rounded-full mt-4 overflow-hidden select-none relative z-10">
                   <div className="h-full bg-[#7C3AED]" style={{ width: `${stats.total > 0 ? ((stats.nurseryNum + stats.daycareNum) / stats.total) * 100 : 0}%` }} />
                 </div>
               </div>
 
-              <div className="bg-white rounded-[24px] border border-slate-100 p-5 shadow-3xs flex flex-col justify-between hover:shadow-2xs transition text-left">
-                <div className="flex justify-between items-center w-full">
-                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider font-slate-400 select-none font-black font-sans">Grade prep</span>
-                  <span className="p-1 px-2.5 rounded-full bg-pink-50 text-pink-700 text-[9px] font-black uppercase tracking-widest leading-none font-sans font-black">K-Level</span>
+              <div className="bg-white rounded-[24px] border border-slate-100 p-5 shadow-3xs flex flex-col justify-between hover:shadow-2xs transition text-left min-w-0 relative overflow-hidden">
+                {/* SVG Diagonal Lines backdrop */}
+                <svg className="absolute inset-0 w-full h-full opacity-[0.03] select-none pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <pattern id="admin-lines-1" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+                      <line x1="0" y1="0" x2="0" y2="8" stroke="#DB2777" strokeWidth="1" />
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#admin-lines-1)" />
+                </svg>
+
+                <div className="flex justify-between items-center w-full min-w-0 relative z-10">
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider font-sans select-none truncate">Grade prep</span>
+                  <span className="p-1 px-2.5 rounded-full bg-pink-50 text-pink-700 text-[9px] font-black uppercase tracking-widest leading-none font-sans font-black shrink-0">K-Level</span>
                 </div>
-                <div className="flex items-baseline gap-1 mt-4">
-                  <span className="text-3xl font-black text-pink-600 tracking-tight">{stats.lkgNum + stats.ukgNum}</span>
-                  <span className="text-xs text-pink-400 font-extrabold uppercase tracking-wide">LKG/UKG</span>
+                <div className="flex items-baseline gap-1 mt-4 min-w-0 overflow-hidden relative z-10">
+                  <span className="text-lg sm:text-xl xl:text-2xl font-black text-pink-600 tracking-tight truncate" title={(stats.lkgNum + stats.ukgNum).toString()}>{stats.lkgNum + stats.ukgNum}</span>
+                  <span className="text-[10px] text-pink-400 font-extrabold uppercase tracking-wide shrink-0">LKG/UKG</span>
                 </div>
-                <div className="w-full h-1.5 bg-pink-100/50 rounded-full mt-4 overflow-hidden select-none">
+                <div className="w-full h-1.5 bg-pink-100/50 rounded-full mt-4 overflow-hidden select-none relative z-10">
                   <div className="h-full bg-[#DB2777]" style={{ width: `${stats.total > 0 ? ((stats.lkgNum + stats.ukgNum) / stats.total) * 105 : 0}%` }} />
                 </div>
               </div>
@@ -1047,18 +1116,38 @@ export default function AdminDashboard({
                             {/* Delete child registers option */}
                             {userRole !== "Staff" && (
                               <td className="p-4 text-right pr-5">
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    if (confirm(`Do you wish to permanently delete student profile ${stud.name}?`)) {
-                                      onDeleteStudent(stud.id);
-                                    }
-                                  }}
-                                  className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl border border-transparent hover:border-red-150 transition duration-200 cursor-pointer shadow-3xs hover:scale-105 active:scale-95"
-                                  title="Delete Permanent"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
+                                {confirmDeleteStudentId === stud.id ? (
+                                  <div className="flex items-center gap-1.5 justify-end animate-fadeIn">
+                                    <button
+                                      type="button"
+                                      onClick={async () => {
+                                        await onDeleteStudent(stud.id);
+                                        setConfirmDeleteStudentId(null);
+                                      }}
+                                      className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white font-extrabold text-[9px] uppercase tracking-wider rounded-lg shadow-3xs cursor-pointer transition-all"
+                                      title="Confirm delete"
+                                    >
+                                      Confirm
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => setConfirmDeleteStudentId(null)}
+                                      className="px-2 py-1 bg-slate-200 hover:bg-slate-350 text-slate-700 font-extrabold text-[9px] uppercase tracking-wider rounded-lg cursor-pointer transition-all"
+                                      title="Cancel delete"
+                                    >
+                                      Cancel
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={() => setConfirmDeleteStudentId(stud.id)}
+                                    className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl border border-transparent hover:border-red-150 transition duration-200 cursor-pointer shadow-3xs hover:scale-105 active:scale-95"
+                                    title="Delete Permanent"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                )}
                               </td>
                             )}
 
@@ -1077,6 +1166,12 @@ export default function AdminDashboard({
       })()}
 
       {activeTab === "staff" && (() => {
+        const sortedStaffList = [...staff].sort((a, b) => {
+          const numA = parseInt(a.id.replace(/\D/g, ""), 10) || 0;
+          const numB = parseInt(b.id.replace(/\D/g, ""), 10) || 0;
+          return numB - numA;
+        });
+
         const stats = (() => {
           let present = 0;
           let absent = 0;
@@ -1117,7 +1212,7 @@ export default function AdminDashboard({
           }
         };
 
-        const filteredStaff = staff.filter((stf) => {
+        const filteredStaff = sortedStaffList.filter((stf) => {
           if (selectedStaffRoleFilter !== "ALL" && stf.role !== selectedStaffRoleFilter) {
             return false;
           }
@@ -1323,7 +1418,20 @@ export default function AdminDashboard({
                                     {getAvatarInitials(stf.name)}
                                   </div>
                                   <div className="text-left">
-                                    <span className="font-extrabold text-slate-800 block text-xs group-hover:text-indigo-900 transition">{stf.name}</span>
+                                    <div className="flex items-center gap-1.5 leading-none">
+                                      <span className="font-extrabold text-slate-800 block text-xs group-hover:text-indigo-900 transition">{stf.name}</span>
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          setEditingStaff(stf);
+                                          setShowEditStaffModal(true);
+                                        }}
+                                        className="p-1 text-slate-400 hover:text-indigo-600 transition cursor-pointer hover:scale-110 active:scale-95 animate-fadeIn"
+                                        title={`Edit profile details for ${stf.name}`}
+                                      >
+                                        <Edit3 className="w-3 h-3" />
+                                      </button>
+                                    </div>
                                     <span className="text-[10px] text-slate-400 font-medium block mt-0.5">Dept: {stf.specialization}</span>
                                   </div>
                                 </div>
@@ -1405,7 +1513,7 @@ export default function AdminDashboard({
                 </div>
 
                 <div className="space-y-3 pr-1 max-h-[460px] overflow-y-auto">
-                  {staff.map((stf) => {
+                  {sortedStaffList.map((stf) => {
                     const initials = getAvatarInitials(stf.name);
                     const avColor = getAvatarColor(stf.role);
 
@@ -1423,18 +1531,53 @@ export default function AdminDashboard({
                             <span className="text-[10px] text-slate-400 block mt-0.5 truncate">{stf.email}</span>
                           </div>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (confirm(`Remove staff details for ${stf.name} permanently from system?`)) {
-                              onDeleteStaff(stf.id);
-                            }
-                          }}
-                          className="p-2 text-slate-400 hover:text-red-500 bg-white hover:bg-red-50 border border-slate-150 rounded-xl cursor-pointer shadow-3xs hover:scale-105 active:scale-95 transition-all shrink-0 ml-1.5"
-                          title="Remove profile"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                        {confirmDeleteStaffId === stf.id ? (
+                          <div className="flex items-center gap-1.5 shrink-0 ml-1.5 animate-fadeIn">
+                            <button
+                              type="button"
+                              onClick={async () => {
+                                await onDeleteStaff(stf.id);
+                                setConfirmDeleteStaffId(null);
+                              }}
+                              className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white font-extrabold text-[9px] uppercase tracking-wider rounded-lg shadow-3xs cursor-pointer transition-all"
+                              title="Confirm registration removal"
+                            >
+                              Confirm
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setConfirmDeleteStaffId(null)}
+                              className="px-2 py-1 bg-slate-200 hover:bg-slate-350 text-slate-700 font-extrabold text-[9px] uppercase tracking-wider rounded-lg cursor-pointer transition-all"
+                              title="Cancel removal"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-1 shrink-0 ml-1.5 animate-fadeIn">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setEditingStaff(stf);
+                                setShowEditStaffModal(true);
+                              }}
+                              className="p-2 text-slate-400 hover:text-indigo-650 bg-white hover:bg-indigo-55/70 border border-slate-150 rounded-xl cursor-pointer shadow-3xs hover:scale-105 active:scale-95 transition duration-150"
+                              title={`Edit profile details for ${stf.name}`}
+                            >
+                              <Edit3 className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setConfirmDeleteStaffId(stf.id);
+                              }}
+                              className="p-2 text-slate-400 hover:text-red-500 bg-white hover:bg-red-50 border border-slate-150 rounded-xl cursor-pointer shadow-3xs hover:scale-105 active:scale-95 transition-all shrink-0"
+                              title="Remove profile"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -2000,9 +2143,7 @@ export default function AdminDashboard({
                         <div className="flex items-center gap-4">
                           <HorizonLogo size="md" />
                           <div className="h-16 w-px bg-slate-300 self-center" />
-                          <img 
-                            src="/arivu_logo.png" 
-                            alt="Arivu Logo" 
+                          <ArivuLogo 
                             className="h-[64px] object-contain select-[#f8fafc] select-none"
                           />
                         </div>
@@ -2148,7 +2289,7 @@ export default function AdminDashboard({
                       <div className="h-1 bg-gradient-to-r from-orange-500 to-indigo-600 rounded" />
                       <div className="flex justify-between items-center text-[8.5px] text-[#A0AEC0] font-sans">
                         <span>© 2026 Horizon International Tech Systems. Bangalore. All rights reserved.</span>
-                        <span className="text-indigo-600 font-bold block">Issued via robintg@gmail.com</span>
+                        <span className="text-indigo-600 font-bold block">Issued via vidyasagarpcg@gmail.com</span>
                       </div>
                     </div>
                   </div>
@@ -2363,13 +2504,40 @@ export default function AdminDashboard({
                             </button>
 
                             {/* Delete button */}
-                            <button
-                              onClick={() => handleDeletePayrollClick(pay.id)}
-                              className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-lg border border-rose-100 hover:scale-105 active:scale-95 transition flex items-center justify-center cursor-pointer"
-                              title="Delete Entry"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
+                            {confirmDeletePayrollId === pay.id ? (
+                              <div className="flex items-center gap-1 animate-fadeIn">
+                                <button
+                                  type="button"
+                                  onClick={async () => {
+                                    if (onDeletePayroll) {
+                                      await onDeletePayroll(pay.id);
+                                    }
+                                    setConfirmDeletePayrollId(null);
+                                  }}
+                                  className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white font-extrabold text-[8px] uppercase tracking-wider rounded-lg shadow-3xs cursor-pointer transition"
+                                  title="Confirm delete ledger"
+                                >
+                                  Confirm
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setConfirmDeletePayrollId(null)}
+                                  className="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-500 font-extrabold text-[8px] uppercase tracking-wider rounded-lg cursor-pointer transition"
+                                  title="Cancel delete"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => setConfirmDeletePayrollId(pay.id)}
+                                className="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-lg border border-rose-100 hover:scale-105 active:scale-95 transition flex items-center justify-center cursor-pointer"
+                                title="Delete Entry"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            )}
                           </div>
                         </td>
                       </tr>
@@ -2716,9 +2884,7 @@ export default function AdminDashboard({
                       <HorizonLogo size="md" showText={false} />
                       <div className="h-16 w-px bg-slate-350 self-center" />
                       {/* Right: Arivu Logo */}
-                      <img 
-                        src="/arivu_logo.png" 
-                        alt="Arivu Logo" 
+                      <ArivuLogo 
                         className="h-[64px] object-contain select-[#f8fafc] select-none"
                       />
                     </div>
@@ -3100,49 +3266,88 @@ export default function AdminDashboard({
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               
               {/* CARD 1: TOTAL GRADED */}
-              <div className="p-5 bg-white border border-slate-150 rounded-3xl shadow-3xs text-left relative overflow-hidden group hover:border-[#1ABC9C]/40 transition duration-300">
-                <div className="absolute top-0 right-0 w-16 h-16 bg-[#1ABC9C]/5 rounded-bl-[40px] flex items-center justify-center text-[#1ABC9C]">
+              <div className="p-5 bg-white border border-slate-150 rounded-3xl shadow-3xs text-left relative overflow-hidden group hover:border-[#1ABC9C]/40 transition duration-300 min-w-0">
+                {/* SVG Light dot grid */}
+                <svg className="absolute inset-0 w-full h-full opacity-[0.03] select-none pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <pattern id="grades-dots" width="10" height="10" patternUnits="userSpaceOnUse">
+                      <circle cx="2" cy="2" r="1" fill="#1ABC9C" />
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#grades-dots)" />
+                </svg>
+
+                <div className="absolute top-0 right-0 w-16 h-16 bg-[#1ABC9C]/5 rounded-bl-[40px] flex items-center justify-center text-[#1ABC9C] shrink-0">
                   <Users className="w-5 h-5 opacity-80" />
                 </div>
-                <span className="text-[10px] text-slate-405 uppercase font-black tracking-wider select-none">Graded Pupils</span>
-                <p className="text-3xl font-mono font-black text-slate-800 m-0 mt-2">{totalGradedCount}</p>
-                <div className="mt-3 text-[10px] text-slate-400 select-none">
+                <div className="min-w-0 relative z-10">
+                  <span className="text-[10px] text-slate-405 uppercase font-black tracking-wider select-none block truncate">Graded Pupils</span>
+                  <p className="text-lg sm:text-xl xl:text-2xl font-mono font-black text-slate-800 m-0 mt-2 truncate tracking-tight" title={totalGradedCount.toString()}>{totalGradedCount}</p>
+                </div>
+                <div className="mt-3 text-[10px] text-slate-400 select-none truncate relative z-10">
                   Active graded profiles
                 </div>
               </div>
 
               {/* CARD 2: CUMULATIVE AVERAGE */}
-              <div className="p-5 bg-white border border-slate-150 rounded-3xl shadow-3xs text-left relative overflow-hidden group hover:border-indigo-400/40 transition duration-300">
-                <div className="absolute top-0 right-0 w-16 h-16 bg-indigo-50 rounded-bl-[40px] flex items-center justify-center text-indigo-500">
+              <div className="p-5 bg-white border border-slate-150 rounded-3xl shadow-3xs text-left relative overflow-hidden group hover:border-indigo-400/40 transition duration-300 min-w-0">
+                {/* SVG Light wave pattern */}
+                <svg className="absolute inset-0 w-full h-full opacity-[0.04] select-none pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0 45 Q 40 25, 80 45 T 160 45 T 240 45" fill="none" stroke="#4F46E5" strokeWidth="1" />
+                </svg>
+
+                <div className="absolute top-0 right-0 w-16 h-16 bg-indigo-50 rounded-bl-[40px] flex items-center justify-center text-indigo-500 shrink-0">
                   <TrendingUp className="w-5 h-5 animate-pulse" />
                 </div>
-                <span className="text-[10px] text-slate-405 uppercase font-black tracking-wider select-none">Class Average</span>
-                <p className="text-3xl font-mono font-black text-indigo-900 m-0 mt-2">{averagePercentage}%</p>
-                <div className="mt-3.5 w-full bg-slate-100 h-1.5 rounded-full overflow-hidden select-none">
+                <div className="min-w-0 relative z-10">
+                  <span className="text-[10px] text-slate-405 uppercase font-black tracking-wider select-none block truncate">Class Average</span>
+                  <p className="text-lg sm:text-xl xl:text-2xl font-mono font-black text-indigo-900 m-0 mt-2 truncate tracking-tight" title={`${averagePercentage}%`}>{averagePercentage}%</p>
+                </div>
+                <div className="mt-3.5 w-full bg-slate-100 h-1.5 rounded-full overflow-hidden select-none relative z-10">
                   <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${averagePercentage}%` }} />
                 </div>
               </div>
 
               {/* CARD 3: OUTSTANDING PERFORMERS */}
-              <div className="p-5 bg-white border border-slate-150 rounded-3xl shadow-3xs text-left relative overflow-hidden group hover:border-amber-400/40 transition duration-300">
-                <div className="absolute top-0 right-0 w-16 h-16 bg-amber-55 bg-amber-50 rounded-bl-[40px] flex items-center justify-center text-amber-500">
+              <div className="p-5 bg-white border border-slate-150 rounded-3xl shadow-3xs text-left relative overflow-hidden group hover:border-amber-400/40 transition duration-300 min-w-0">
+                {/* SVG light target concentric rings */}
+                <svg className="absolute inset-0 w-full h-full opacity-[0.03] select-none pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="90%" cy="90%" r="50" fill="none" stroke="#D97706" strokeWidth="1" />
+                  <circle cx="90%" cy="90%" r="30" fill="none" stroke="#D97706" strokeWidth="0.75" />
+                </svg>
+
+                <div className="absolute top-0 right-0 w-16 h-16 bg-amber-50 rounded-bl-[40px] flex items-center justify-center text-amber-500 shrink-0">
                   <Award className="w-5 h-5 text-amber-500" />
                 </div>
-                <span className="text-[10px] text-slate-405 uppercase font-black tracking-wider select-none">High Achievers</span>
-                <p className="text-3xl font-mono font-black text-slate-800 m-0 mt-2">{excellentAchieversCount}</p>
-                <div className="mt-3 text-[10px] text-slate-400 select-none">
+                <div className="min-w-0 relative z-10">
+                  <span className="text-[10px] text-slate-405 uppercase font-black tracking-wider select-none block truncate">High Achievers</span>
+                  <p className="text-lg sm:text-xl xl:text-2xl font-mono font-black text-slate-800 m-0 mt-2 truncate tracking-tight" title={excellentAchieversCount.toString()}>{excellentAchieversCount}</p>
+                </div>
+                <div className="mt-3 text-[10px] text-slate-400 select-none truncate relative z-10">
                   Scores marking <span className="font-bold text-amber-600">85%+ weighted</span>
                 </div>
               </div>
 
               {/* CARD 4: TRACKED SUBJECTS */}
-              <div className="p-5 bg-white border border-slate-150 rounded-3xl shadow-3xs text-left relative overflow-hidden group hover:border-pink-400/40 transition duration-300">
-                <div className="absolute top-0 right-0 w-16 h-16 bg-pink-50 rounded-bl-[40px] flex items-center justify-center text-pink-500">
+              <div className="p-5 bg-white border border-slate-150 rounded-3xl shadow-3xs text-left relative overflow-hidden group hover:border-pink-400/40 transition duration-300 min-w-0">
+                {/* SVG light diagonal stripes */}
+                <svg className="absolute inset-0 w-full h-full opacity-[0.03] select-none pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <pattern id="grades-stripes" width="8" height="8" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+                      <line x1="0" y1="0" x2="0" y2="8" stroke="#DB2777" strokeWidth="1" />
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#grades-stripes)" />
+                </svg>
+
+                <div className="absolute top-0 right-0 w-16 h-16 bg-pink-50 rounded-bl-[40px] flex items-center justify-center text-pink-500 shrink-0">
                   <BookOpen className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] text-slate-405 uppercase font-black tracking-wider select-none">Evaluated Disciplines</span>
-                <p className="text-3xl font-mono font-black text-slate-800 m-0 mt-2">{subjectCount}</p>
-                <div className="mt-3 text-[10px] text-slate-400 select-none">
+                <div className="min-w-0 relative z-10">
+                  <span className="text-[10px] text-slate-405 uppercase font-black tracking-wider select-none block truncate">Evaluated Disciplines</span>
+                  <p className="text-lg sm:text-xl xl:text-2xl font-mono font-black text-slate-800 m-0 mt-2 truncate tracking-tight" title={subjectCount.toString()}>{subjectCount}</p>
+                </div>
+                <div className="mt-3 text-[10px] text-slate-400 select-none truncate relative z-10">
                   Pediatric streams tracked
                 </div>
               </div>
@@ -3847,17 +4052,38 @@ export default function AdminDashboard({
                                 >
                                   <Edit3 className="w-3 h-3" />
                                 </button>
-                                <button
-                                  onClick={async () => {
-                                    if (confirm("Are you sure you want to delete this activities post?")) {
-                                      await onDeleteHomework(hw.id);
-                                    }
-                                  }}
-                                  className="p-1.5 bg-white border border-slate-200 hover:border-red-400 hover:bg-red-50 text-slate-500 hover:text-red-600 rounded-lg cursor-pointer transition-all"
-                                  title="Delete Post"
-                                >
-                                  <Trash2 className="w-3 h-3" />
-                                </button>
+                                {confirmDeleteHomeworkId === hw.id ? (
+                                  <div className="flex items-center gap-1 animate-fadeIn">
+                                    <button
+                                      type="button"
+                                      onClick={async () => {
+                                        await onDeleteHomework(hw.id);
+                                        setConfirmDeleteHomeworkId(null);
+                                      }}
+                                      className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white font-extrabold text-[8px] uppercase tracking-wider rounded-lg shadow-3xs cursor-pointer transition"
+                                      title="Confirm delete post"
+                                    >
+                                      Confirm
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => setConfirmDeleteHomeworkId(null)}
+                                      className="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-500 font-extrabold text-[8px] uppercase tracking-wider rounded-lg cursor-pointer transition"
+                                      title="Cancel delete"
+                                    >
+                                      Cancel
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={() => setConfirmDeleteHomeworkId(hw.id)}
+                                    className="p-1.5 bg-white border border-slate-200 hover:border-red-400 hover:bg-red-50 text-slate-500 hover:text-red-600 rounded-lg cursor-pointer transition-all"
+                                    title="Delete Post"
+                                  >
+                                    <Trash2 className="w-3 h-3" />
+                                  </button>
+                                )}
                               </div>
                             </div>
 
@@ -4007,7 +4233,7 @@ export default function AdminDashboard({
                   required
                   placeholder="+91 ...."
                   value={newStaff.phone}
-                  onChange={(e) => setNewStaff({ ...newStaff, phone: e.target.value })}
+                  onChange={(e) => setNewStaff({ ...newStaff, phone: formatPhoneInput(e.target.value) })}
                   className="w-full p-3.5 rounded-2xl border border-slate-205 bg-slate-50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-150/45 focus:border-indigo-400 font-semibold transition"
                 />
               </div>
@@ -4017,6 +4243,140 @@ export default function AdminDashboard({
                 className="w-full py-4 text-white bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-505 hover:to-indigo-650 text-xs font-black uppercase tracking-widest rounded-2xl shadow-md shadow-indigo-200 hover:shadow-lg hover:scale-[1.01] active:scale-[0.99] transition duration-200 cursor-pointer mt-2"
               >
                 Confirm Appointment & Register Staff
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* EDIT STAFF PROFILE MODAL DIALOG */}
+      {showEditStaffModal && editingStaff && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+          <div className="w-full max-w-md bg-white rounded-[32px] shadow-2xl overflow-hidden border border-slate-100 flex flex-col">
+            <div className="p-6 bg-gradient-to-r from-indigo-600 to-violet-600 text-white flex justify-between items-center relative">
+              <div className="absolute inset-x-0 bottom-0 h-px bg-white/10" />
+              <div>
+                <h4 className="font-extrabold text-sm uppercase tracking-wider flex items-center gap-1.5">
+                  <Edit3 className="w-4 h-4 text-yellow-300 stroke-[3px]" /> Edit Staff Member Profile
+                </h4>
+                <p className="text-[10px] text-white/80 mt-0.5">Modify profile, specialized branch, or salary details.</p>
+              </div>
+              <button 
+                type="button"
+                onClick={() => {
+                  setShowEditStaffModal(false);
+                  setEditingStaff(null);
+                }} 
+                className="w-7 h-7 bg-white/10 hover:bg-white/20 active:scale-90 transition rounded-full flex items-center justify-center text-white font-bold cursor-pointer text-xs"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleUpdateStaffSubmit} className="p-6 space-y-4 text-xs text-slate-800 text-left">
+              <div className="space-y-1">
+                <label className="text-slate-450 font-black uppercase tracking-wider text-[9.5px] block">Full Name</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Mrs. Preeti Sharma"
+                  value={editingStaff.name}
+                  onChange={(e) => setEditingStaff({ ...editingStaff, name: e.target.value })}
+                  className="w-full p-3.5 rounded-2xl border border-slate-205 bg-slate-50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-150/45 focus:border-indigo-400 font-semibold transition"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-slate-450 font-black uppercase tracking-wider text-[9.5px] block">Administration Role</label>
+                <select
+                  value={editingStaff.role}
+                  onChange={(e) => setEditingStaff({ ...editingStaff, role: e.target.value as any })}
+                  className="w-full p-3.5 rounded-2xl border border-slate-205 bg-slate-50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-150/45 focus:border-indigo-400 font-bold text-slate-705 transition cursor-pointer"
+                >
+                  <option value="Staff">Teacher / Educator</option>
+                  <option value="Accountant">Accountant / Bills Lead</option>
+                  <option value="Admin">System Admin (Full Access)</option>
+                  <option value="Management">Management Board</option>
+                </select>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-slate-450 font-black uppercase tracking-wider text-[9.5px] block">Specialization / Department</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Daycare Coordinator, LKG teacher"
+                  value={editingStaff.specialization}
+                  onChange={(e) => setEditingStaff({ ...editingStaff, specialization: e.target.value })}
+                  className="w-full p-3.5 rounded-2xl border border-slate-205 bg-slate-50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-150/45 focus:border-indigo-400 font-semibold transition"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-slate-450 font-black uppercase tracking-wider text-[9.5px] block">E-mail</label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="name@gmail.com"
+                    value={editingStaff.email}
+                    onChange={(e) => setEditingStaff({ ...editingStaff, email: e.target.value })}
+                    className="w-full p-3.5 rounded-2xl border border-slate-205 bg-slate-50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-150/45 focus:border-indigo-400 font-semibold transition"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-slate-450 font-black uppercase tracking-wider text-[9.5px] block">Salary (INR/Month)</label>
+                  <input
+                    type="number"
+                    required
+                    value={editingStaff.salary}
+                    onChange={(e) => setEditingStaff({ ...editingStaff, salary: parseInt(e.target.value) || 0 })}
+                    className="w-full p-3.5 rounded-2xl border border-slate-205 bg-slate-50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-150/45 focus:border-indigo-400 font-mono font-bold text-slate-800 transition"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-slate-450 font-black uppercase tracking-wider text-[9.5px] block">Primary Phone</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="+91 ...."
+                    value={editingStaff.phone}
+                    onChange={(e) => setEditingStaff({ ...editingStaff, phone: formatPhoneInput(e.target.value) })}
+                    className="w-full p-3.5 rounded-2xl border border-slate-205 bg-slate-50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-150/45 focus:border-indigo-400 font-semibold transition"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-slate-450 font-black uppercase tracking-wider text-[9.5px] block">Status</label>
+                  <select
+                    value={editingStaff.status}
+                    onChange={(e) => setEditingStaff({ ...editingStaff, status: e.target.value as any })}
+                    className="w-full p-3.5 rounded-2xl border border-slate-205 bg-slate-50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-150/45 focus:border-indigo-400 font-bold text-slate-705 transition cursor-pointer"
+                  >
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-slate-450 font-black uppercase tracking-wider text-[9.5px] block">Joining Date</label>
+                <input
+                  type="date"
+                  required
+                  value={editingStaff.joiningDate}
+                  onChange={(e) => setEditingStaff({ ...editingStaff, joiningDate: e.target.value })}
+                  className="w-full p-3.5 rounded-2xl border border-slate-205 bg-slate-50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-150/45 focus:border-indigo-400 font-semibold transition"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-4 text-white bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-650 hover:to-violet-505 text-xs font-black uppercase tracking-widest rounded-2xl shadow-md shadow-indigo-200 hover:shadow-lg hover:scale-[1.01] active:scale-[0.99] transition duration-200 cursor-pointer mt-2"
+              >
+                Save Profile Modifications
               </button>
             </form>
           </div>
@@ -4090,7 +4450,7 @@ export default function AdminDashboard({
                   required
                   placeholder="e.g. +91 9845012345"
                   value={editParentPhone}
-                  onChange={(e) => setEditParentPhone(e.target.value)}
+                  onChange={(e) => setEditParentPhone(formatPhoneInput(e.target.value))}
                   className="w-full p-3 rounded-xl border border-orange-200 bg-orange-50/5 focus:outline-none focus:ring-1 focus:ring-orange-400 font-semibold text-xs font-mono"
                 />
               </div>
@@ -4272,7 +4632,7 @@ export default function AdminDashboard({
                     required
                     placeholder="+91 ..."
                     value={newStudent.contactPhone}
-                    onChange={(e) => setNewStudent({ ...newStudent, contactPhone: e.target.value })}
+                    onChange={(e) => setNewStudent({ ...newStudent, contactPhone: formatPhoneInput(e.target.value) })}
                     className="w-full p-3 rounded-xl border border-gray-250 bg-gray-50 focus:outline-none"
                   />
                 </div>

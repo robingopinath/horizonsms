@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import HorizonLogo from "./HorizonLogo";
+import NextGenLogo from "./NextGenLogo";
 import { Student, StaffMember, Invoice, AttendanceRecord, LessonPlan, CourseType } from "../types";
 import { 
   Users, 
@@ -292,9 +293,7 @@ export default function PublicSummaryDashboard({
             
             {/* Playful Real PNG NextGen Gurukul Logo matching the uploaded design */}
             <div className="flex flex-col items-center justify-center shrink-0 w-[155px] sm:w-[170px] pt-0.5">
-              <img 
-                src="/nextgen_logo.png" 
-                alt="Nextgen Gurukul Logo" 
+              <NextGenLogo 
                 className="w-full h-auto select-none hover:scale-[1.03] transition-transform duration-200"
               />
             </div>
@@ -320,12 +319,22 @@ export default function PublicSummaryDashboard({
             boxShadow: "0 20px 25px -5px rgba(99, 102, 241, 0.22), 0 8px 10px -6px rgba(99, 102, 241, 0.22)" 
           }}
           transition={{ type: "spring", stiffness: 150, damping: 15 }}
-          className="bg-gradient-to-br from-[#EEF2FF] to-[#DBEAFE] border border-indigo-200/80 p-4 sm:p-5 rounded-[24px] shadow-md flex flex-col justify-between transition-all duration-300 cursor-pointer relative overflow-hidden group"
+          className="bg-gradient-to-br from-[#EEF2FF] to-[#DBEAFE] border border-indigo-200/80 p-4 sm:p-5 rounded-[24px] shadow-md flex flex-col justify-between transition-all duration-300 cursor-pointer relative overflow-hidden group min-w-0"
         >
+          {/* Light Vector Grid Mesh Background */}
+          <svg className="absolute inset-0 w-full h-full opacity-[0.06] select-none pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="indigo-mesh" width="10" height="10" patternUnits="userSpaceOnUse">
+                <circle cx="2" cy="2" r="1.5" fill="#4F46E5" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#indigo-mesh)" />
+          </svg>
+          
           {/* Subtle colored card glow ornament */}
           <div className="absolute top-0 right-0 w-16 h-16 bg-indigo-400/10 rounded-full blur-xl pointer-events-none transition-transform duration-500 group-hover:scale-150" />
           
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center justify-between">
               <motion.div 
                 animate={{ y: [0, -3, 0] }}
@@ -340,11 +349,11 @@ export default function PublicSummaryDashboard({
               </span>
             </div>
             
-            <h4 className="text-indigo-700 font-black text-[9.5px] tracking-widest uppercase mt-4 leading-none">
+            <h4 className="text-indigo-700 font-black text-[9.5px] tracking-widest uppercase mt-4 leading-none truncate">
               Active Students
             </h4>
           </div>
-          <span className="text-3xl font-black text-indigo-950 font-sans mt-3.5 block leading-none">
+          <span className="text-lg sm:text-xl xl:text-2xl font-black text-indigo-950 font-sans mt-3.5 block leading-none truncate max-w-full animate-fade-in tracking-tight" title={totalStudentsCount.toString()}>
             {totalStudentsCount}
           </span>
         </motion.div>
@@ -359,12 +368,18 @@ export default function PublicSummaryDashboard({
             boxShadow: "0 20px 25px -5px rgba(16, 185, 129, 0.22), 0 8px 10px -6px rgba(16, 185, 129, 0.22)" 
           }}
           transition={{ type: "spring", stiffness: 150, damping: 15 }}
-          className="bg-gradient-to-br from-[#ECFDF5] to-[#D1FAE5] border border-emerald-200/80 p-4 sm:p-5 rounded-[24px] shadow-md flex flex-col justify-between transition-all duration-300 cursor-pointer relative overflow-hidden group"
+          className="bg-gradient-to-br from-[#ECFDF5] to-[#D1FAE5] border border-emerald-200/80 p-4 sm:p-5 rounded-[24px] shadow-md flex flex-col justify-between transition-all duration-300 cursor-pointer relative overflow-hidden group min-w-0"
         >
+          {/* Light Vector Sine-wave Path Background */}
+          <svg className="absolute inset-0 w-full h-full opacity-[0.08] select-none pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 45 Q 60 15, 120 45 T 240 45" fill="none" stroke="#059669" strokeWidth="1.5" />
+            <path d="M0 55 Q 60 25, 120 55 T 240 55" fill="none" stroke="#059669" strokeWidth="1" className="opacity-50" />
+          </svg>
+
           {/* Subtle colored card glow ornament */}
           <div className="absolute top-0 right-0 w-16 h-16 bg-emerald-400/10 rounded-full blur-xl pointer-events-none transition-transform duration-500 group-hover:scale-150" />
-
-          <div>
+ 
+          <div className="min-w-0">
             <div className="flex items-center justify-between">
               <motion.div 
                 animate={{ y: [0, -3, 0] }}
@@ -378,12 +393,12 @@ export default function PublicSummaryDashboard({
                 Daily
               </span>
             </div>
-
-            <h4 className="text-[#059669] font-black text-[9.5px] tracking-widest uppercase mt-4 leading-none">
+ 
+            <h4 className="text-[#059669] font-black text-[9.5px] tracking-widest uppercase mt-4 leading-none truncate">
               Today's Attendance
             </h4>
           </div>
-          <span className="text-3xl font-black text-emerald-950 font-sans mt-3.5 block leading-none">
+          <span className="text-lg sm:text-xl xl:text-2xl font-black text-emerald-950 font-sans mt-3.5 block leading-none truncate max-w-full tracking-tight" title={`${todayAttendancePercent}%`}>
             {todayAttendancePercent}%
           </span>
         </motion.div>
@@ -398,12 +413,19 @@ export default function PublicSummaryDashboard({
             boxShadow: "0 20px 25px -5px rgba(139, 92, 246, 0.22), 0 8px 10px -6px rgba(139, 92, 246, 0.22)" 
           }}
           transition={{ type: "spring", stiffness: 150, damping: 15 }}
-          className="bg-gradient-to-br from-[#F5F3FF] to-[#EDE9FE] border border-violet-200/80 p-4 sm:p-5 rounded-[24px] shadow-md flex flex-col justify-between transition-all duration-300 cursor-pointer relative overflow-hidden group"
+          className="bg-gradient-to-br from-[#F5F3FF] to-[#EDE9FE] border border-violet-200/80 p-4 sm:p-5 rounded-[24px] shadow-md flex flex-col justify-between transition-all duration-300 cursor-pointer relative overflow-hidden group min-w-0"
         >
+          {/* Light Vector Concentric Arcs Background */}
+          <svg className="absolute inset-0 w-full h-full opacity-[0.05] select-none pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100%" cy="100%" r="90" fill="none" stroke="#7C3AED" strokeWidth="2" />
+            <circle cx="100%" cy="100%" r="60" fill="none" stroke="#7C3AED" strokeWidth="1.5" />
+            <circle cx="100%" cy="100%" r="30" fill="none" stroke="#7C3AED" strokeWidth="1" />
+          </svg>
+
           {/* Subtle colored card glow ornament */}
           <div className="absolute top-0 right-0 w-16 h-16 bg-violet-400/10 rounded-full blur-xl pointer-events-none transition-transform duration-500 group-hover:scale-150" />
-
-          <div>
+ 
+          <div className="min-w-0">
             <div className="flex items-center justify-between">
               <motion.div 
                 animate={{ y: [0, -3, 0] }}
@@ -417,12 +439,12 @@ export default function PublicSummaryDashboard({
                 Invoiced
               </span>
             </div>
-
-            <h4 className="text-[#7C3AED] font-black text-[9.5px] tracking-widest uppercase mt-4 leading-none">
+ 
+            <h4 className="text-[#7C3AED] font-black text-[9.5px] tracking-widest uppercase mt-4 leading-none truncate">
               Total Fees
             </h4>
           </div>
-          <span className="text-2xl sm:text-3xl font-black text-violet-950 font-sans mt-3.5 block tracking-tight leading-none">
+          <span className="text-lg sm:text-xl xl:text-2xl font-black text-violet-950 font-sans mt-3.5 block tracking-tight leading-none truncate max-w-full" title={`₹${totalInvoiced.toLocaleString("en-IN")}`}>
             ₹{totalInvoiced.toLocaleString("en-IN")}
           </span>
         </motion.div>
@@ -437,12 +459,22 @@ export default function PublicSummaryDashboard({
             boxShadow: "0 20px 25px -5px rgba(6, 182, 212, 0.22), 0 8px 10px -6px rgba(6, 182, 212, 0.22)" 
           }}
           transition={{ type: "spring", stiffness: 150, damping: 15 }}
-          className="bg-gradient-to-br from-[#ECFEFF] to-[#CFFAFE] border border-cyan-200/80 p-4 sm:p-5 rounded-[24px] shadow-md flex flex-col justify-between transition-all duration-300 cursor-pointer relative overflow-hidden group"
+          className="bg-gradient-to-br from-[#ECFEFF] to-[#CFFAFE] border border-cyan-200/80 p-4 sm:p-5 rounded-[24px] shadow-md flex flex-col justify-between transition-all duration-300 cursor-pointer relative overflow-hidden group min-w-0"
         >
+          {/* Light Vector Technical Array background */}
+          <svg className="absolute inset-0 w-full h-full opacity-[0.06] select-none pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="cyan-grid" width="12" height="12" patternUnits="userSpaceOnUse">
+                <path d="M 12 0 L 0 0 0 12" fill="none" stroke="#0891B2" strokeWidth="0.75" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#cyan-grid)" />
+          </svg>
+
           {/* Subtle colored card glow ornament */}
           <div className="absolute top-0 right-0 w-16 h-16 bg-cyan-400/10 rounded-full blur-xl pointer-events-none transition-transform duration-500 group-hover:scale-150" />
-
-          <div>
+ 
+          <div className="min-w-0">
             <div className="flex items-center justify-between">
               <motion.div 
                 animate={{ y: [0, -3, 0] }}
@@ -456,12 +488,12 @@ export default function PublicSummaryDashboard({
                 Cleared
               </span>
             </div>
-
-            <h4 className="text-[#0891B2] font-black text-[9.5px] tracking-widest uppercase mt-4 leading-none">
+ 
+            <h4 className="text-[#0891B2] font-black text-[9.5px] tracking-widest uppercase mt-4 leading-none truncate">
               Paid
             </h4>
           </div>
-          <span className="text-2xl sm:text-3xl font-black text-cyan-950 font-sans mt-3.5 block tracking-tight leading-none">
+          <span className="text-lg sm:text-xl xl:text-2xl font-black text-cyan-950 font-sans mt-3.5 block tracking-tight leading-none truncate max-w-full" title={`₹${paidFees.toLocaleString("en-IN")}`}>
             ₹{paidFees.toLocaleString("en-IN")}
           </span>
         </motion.div>
@@ -476,12 +508,22 @@ export default function PublicSummaryDashboard({
             boxShadow: "0 20px 25px -5px rgba(245, 158, 11, 0.22), 0 8px 10px -6px rgba(245, 158, 11, 0.22)" 
           }}
           transition={{ type: "spring", stiffness: 150, damping: 15 }}
-          className="bg-gradient-to-br from-[#FFFBEB] to-[#FEF3C7] border border-amber-200/80 p-4 sm:p-5 rounded-[24px] shadow-md flex flex-col justify-between transition-all duration-300 cursor-pointer relative overflow-hidden group"
+          className="bg-gradient-to-br from-[#FFFBEB] to-[#FEF3C7] border border-amber-200/80 p-4 sm:p-5 rounded-[24px] shadow-md flex flex-col justify-between transition-all duration-300 cursor-pointer relative overflow-hidden group min-w-0"
         >
+          {/* Light Vector Diagonal Stripes */}
+          <svg className="absolute inset-0 w-full h-full opacity-[0.05] select-none pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="amber-stripes" width="15" height="15" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
+                <line x1="0" y1="0" x2="0" y2="15" stroke="#D97706" strokeWidth="2" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#amber-stripes)" />
+          </svg>
+
           {/* Subtle colored card glow ornament */}
           <div className="absolute top-0 right-0 w-16 h-16 bg-amber-400/10 rounded-full blur-xl pointer-events-none transition-transform duration-500 group-hover:scale-150" />
-
-          <div>
+ 
+          <div className="min-w-0">
             <div className="flex items-center justify-between">
               <motion.div 
                 animate={{ y: [0, -3, 0] }}
@@ -495,12 +537,12 @@ export default function PublicSummaryDashboard({
                 Pending
               </span>
             </div>
-
-            <h4 className="text-[#D97706] font-black text-[9.5px] tracking-widest uppercase mt-4 leading-none">
+ 
+            <h4 className="text-[#D97706] font-black text-[9.5px] tracking-widest uppercase mt-4 leading-none truncate">
               Balance
             </h4>
           </div>
-          <span className="text-2xl sm:text-3xl font-black text-amber-950 font-sans mt-3.5 block tracking-tight leading-none font-sans">
+          <span className="text-lg sm:text-xl xl:text-2xl font-black text-amber-950 font-sans mt-3.5 block tracking-tight leading-none truncate max-w-full" title={`₹${balanceFees.toLocaleString("en-IN")}`}>
             ₹{balanceFees.toLocaleString("en-IN")}
           </span>
         </motion.div>
@@ -515,12 +557,18 @@ export default function PublicSummaryDashboard({
             boxShadow: "0 20px 25px -5px rgba(239, 68, 68, 0.22), 0 8px 10px -6px rgba(239, 68, 68, 0.22)" 
           }}
           transition={{ type: "spring", stiffness: 150, damping: 15 }}
-          className="bg-gradient-to-br from-[#FFF5F5] to-[#FEE2E2] border border-rose-200/80 p-4 sm:p-5 rounded-[24px] shadow-md flex flex-col justify-between transition-all duration-300 cursor-pointer relative overflow-hidden group"
+          className="bg-gradient-to-br from-[#FFF5F5] to-[#FEE2E2] border border-rose-200/80 p-4 sm:p-5 rounded-[24px] shadow-md flex flex-col justify-between transition-all duration-300 cursor-pointer relative overflow-hidden group min-w-0"
         >
+          {/* Light Vector Dotted Rings Background */}
+          <svg className="absolute inset-0 w-full h-full opacity-[0.06] select-none pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="10%" cy="90%" r="60" fill="none" stroke="#DC2626" strokeWidth="1" strokeDasharray="3,3" />
+            <circle cx="10%" cy="90%" r="40" fill="none" stroke="#DC2626" strokeWidth="1" strokeDasharray="2,2" />
+          </svg>
+
           {/* Subtle colored card glow ornament */}
           <div className="absolute top-0 right-0 w-16 h-16 bg-rose-400/10 rounded-full blur-xl pointer-events-none transition-transform duration-500 group-hover:scale-150" />
-
-          <div>
+ 
+          <div className="min-w-0">
             <div className="flex items-center justify-between">
               <motion.div 
                 animate={{ y: [0, -3, 0] }}
@@ -534,12 +582,12 @@ export default function PublicSummaryDashboard({
                 Staff
               </span>
             </div>
-
-            <h4 className="text-[#DC2626] font-black text-[9.5px] tracking-widest uppercase mt-4 leading-none">
+ 
+            <h4 className="text-[#DC2626] font-black text-[9.5px] tracking-widest uppercase mt-4 leading-none truncate">
               Total Staff
             </h4>
           </div>
-          <span className="text-3xl font-black text-rose-950 font-sans mt-3.5 block leading-none">
+          <span className="text-lg sm:text-xl xl:text-2xl font-black text-rose-950 font-sans mt-3.5 block leading-none truncate max-w-full tracking-tight" title={activeStaffCount.toString()}>
             {activeStaffCount}
           </span>
         </motion.div>

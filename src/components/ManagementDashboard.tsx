@@ -106,17 +106,28 @@ export default function ManagementDashboard({
           animate={{ opacity: 1, y: 0 }}
           whileHover={{ y: -4, scale: 1.01, transition: { duration: 0.2 } }}
           transition={{ type: "spring", stiffness: 120, damping: 14 }}
-          className="bg-gradient-to-br from-[#FF6B6B] to-[#FF8E53] p-6 rounded-3xl text-white shadow-md space-y-4 relative overflow-hidden cursor-pointer"
+          className="bg-gradient-to-br from-[#FF6B6B] to-[#FF8E53] p-6 rounded-3xl text-white shadow-md space-y-4 relative overflow-hidden cursor-pointer min-w-0"
         >
-          <div className="relative z-10">
-            <div className="bg-white/20 w-10 h-10 rounded-2xl flex items-center justify-center">
+          {/* Light Vector Grid Background */}
+          <svg className="absolute inset-0 w-full h-full opacity-10 select-none pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="mgmt-grid" width="12" height="12" patternUnits="userSpaceOnUse">
+                <path d="M 12 0 L 0 0 0 12" fill="none" stroke="white" strokeWidth="0.75" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#mgmt-grid)" />
+            <circle cx="90%" cy="20%" r="50" fill="none" stroke="white" strokeWidth="1" className="opacity-20 animate-pulse" />
+          </svg>
+
+          <div className="relative z-10 min-w-0">
+            <div className="bg-white/20 w-10 h-10 rounded-2xl flex items-center justify-center shrink-0">
               <Users className="w-5 h-5" />
             </div>
-            <div className="mt-4">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-white/80 block">Active Student Enrolled</span>
-              <span className="text-3xl font-black mt-1 block">{totalStudents}</span>
+            <div className="mt-4 min-w-0">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-white/80 block truncate">Active Student Enrolled</span>
+              <span className="text-lg sm:text-xl xl:text-2xl font-black mt-1 block truncate max-w-full tracking-tight" title={totalStudents.toString()}>{totalStudents}</span>
             </div>
-            <p className="text-[10.5px] text-white/75 mt-2">Day-Care up to UKG courses active</p>
+            <p className="text-[10.5px] text-white/75 mt-2 truncate">Day-Care up to UKG courses active</p>
           </div>
           <div className="absolute right-[-10px] bottom-[-10px] text-white/10 transform rotate-12 select-none">
             <Users className="w-24 h-24" />
@@ -128,17 +139,23 @@ export default function ManagementDashboard({
           animate={{ opacity: 1, y: 0 }}
           whileHover={{ y: -4, scale: 1.01, transition: { duration: 0.2 } }}
           transition={{ type: "spring", stiffness: 120, damping: 14 }}
-          className="bg-gradient-to-br from-[#4E54C8] to-[#8F94FB] p-6 rounded-3xl text-white shadow-md space-y-4 relative overflow-hidden cursor-pointer"
+          className="bg-gradient-to-br from-[#4E54C8] to-[#8F94FB] p-6 rounded-3xl text-white shadow-md space-y-4 relative overflow-hidden cursor-pointer min-w-0"
         >
-          <div className="relative z-10">
-            <div className="bg-white/20 w-10 h-10 rounded-2xl flex items-center justify-center">
+          {/* Light Vector Wave Background */}
+          <svg className="absolute inset-0 w-full h-full opacity-[0.12] select-none pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 40 C 40 10, 80 70, 120 30 C 160 5, 200 65, 240 40 L 240 120 L 0 120 Z" fill="none" stroke="white" strokeWidth="1" />
+            <path d="M0 60 C 50 30, 90 90, 140 50 C 180 20, 210 80, 260 60 L 260 140 L 0 140 Z" fill="none" stroke="white" strokeWidth="1" className="opacity-50" />
+          </svg>
+
+          <div className="relative z-10 min-w-0">
+            <div className="bg-white/20 w-10 h-10 rounded-2xl flex items-center justify-center shrink-0">
               <Activity className="w-5 h-5" />
             </div>
-            <div className="mt-4">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-white/80 block">Average Day Attendance</span>
-              <span className="text-3xl font-black mt-1 block">{avgAttendance}%</span>
+            <div className="mt-4 min-w-0">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-white/80 block truncate">Average Day Attendance</span>
+              <span className="text-lg sm:text-xl xl:text-2xl font-black mt-1 block truncate max-w-full tracking-tight" title={`${avgAttendance}%`}>{avgAttendance}%</span>
             </div>
-            <p className="text-[10.5px] text-white/75 mt-2">Overall classroom active ratio</p>
+            <p className="text-[10.5px] text-white/75 mt-2 truncate">Overall classroom active ratio</p>
           </div>
           <div className="absolute right-[-10px] bottom-[-10px] text-white/10 transform rotate-12 select-none">
             <Activity className="w-24 h-24" />
@@ -150,17 +167,25 @@ export default function ManagementDashboard({
           animate={{ opacity: 1, y: 0 }}
           whileHover={{ y: -4, scale: 1.01, transition: { duration: 0.2 } }}
           transition={{ type: "spring", stiffness: 120, damping: 14 }}
-          className="bg-gradient-to-br from-[#11998e] to-[#38ef7d] p-6 rounded-3xl text-white shadow-md space-y-4 relative overflow-hidden cursor-pointer"
+          className="bg-gradient-to-br from-[#11998e] to-[#38ef7d] p-6 rounded-3xl text-white shadow-md space-y-4 relative overflow-hidden cursor-pointer min-w-0"
         >
-          <div className="relative z-10">
-            <div className="bg-white/20 w-10 h-10 rounded-2xl flex items-center justify-center">
+          {/* Light Vector Concentric Circles Background */}
+          <svg className="absolute inset-0 w-full h-full opacity-10 select-none pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="85%" cy="85%" r="120" fill="none" stroke="white" strokeWidth="1" />
+            <circle cx="85%" cy="85%" r="90" fill="none" stroke="white" strokeWidth="1" />
+            <circle cx="85%" cy="85%" r="60" fill="none" stroke="white" strokeWidth="1" />
+            <circle cx="85%" cy="85%" r="30" fill="none" stroke="white" strokeWidth="1" />
+          </svg>
+
+          <div className="relative z-10 min-w-0">
+            <div className="bg-white/20 w-10 h-10 rounded-2xl flex items-center justify-center shrink-0">
               <Coins className="w-5 h-5" />
             </div>
-            <div className="mt-4">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-white/80 block">Aggregate Paid Fees</span>
-              <span className="text-3xl font-black mt-1 block">₹{aggregateFeesCollected.toLocaleString("en-IN")}</span>
+            <div className="mt-4 min-w-0">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-white/80 block truncate">Aggregate Paid Fees</span>
+              <span className="text-lg sm:text-xl xl:text-2xl font-black mt-1 block truncate max-w-full tracking-tight" title={`₹${aggregateFeesCollected.toLocaleString("en-IN")}`}>₹{aggregateFeesCollected.toLocaleString("en-IN")}</span>
             </div>
-            <p className="text-[10.5px] text-white/75 mt-2">Secured Stripe & cash invoices clearance</p>
+            <p className="text-[10.5px] text-white/75 mt-2 truncate">Secured Stripe & cash invoices clearance</p>
           </div>
           <div className="absolute right-[-10px] bottom-[-10px] text-white/10 transform rotate-12 select-none">
             <Coins className="w-24 h-24" />
@@ -172,17 +197,27 @@ export default function ManagementDashboard({
           animate={{ opacity: 1, y: 0 }}
           whileHover={{ y: -4, scale: 1.01, transition: { duration: 0.2 } }}
           transition={{ type: "spring", stiffness: 120, damping: 14 }}
-          className="bg-gradient-to-br from-[#F2994A] to-[#F2C94C] p-6 rounded-3xl text-white shadow-md space-y-4 relative overflow-hidden cursor-pointer"
+          className="bg-gradient-to-br from-[#F2994A] to-[#F2C94C] p-6 rounded-3xl text-white shadow-md space-y-4 relative overflow-hidden cursor-pointer min-w-0"
         >
-          <div className="relative z-10">
-            <div className="bg-white/20 w-10 h-10 rounded-2xl flex items-center justify-center">
+          {/* Light Vector Diagonal Lines */}
+          <svg className="absolute inset-0 w-full h-full opacity-[0.08]" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="mgmt-lines" width="10" height="10" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                <line x1="0" y1="0" x2="0" y2="10" stroke="white" strokeWidth="1.5" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#mgmt-lines)" />
+          </svg>
+
+          <div className="relative z-10 min-w-0">
+            <div className="bg-white/20 w-10 h-10 rounded-2xl flex items-center justify-center shrink-0">
               <TrendingUp className="w-5 h-5" />
             </div>
-            <div className="mt-4">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-white/80 block">Outstanding Arrears</span>
-              <span className="text-3xl font-black mt-1 block">₹{outstandingFeesAggregate.toLocaleString("en-IN")}</span>
+            <div className="mt-4 min-w-0">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-white/80 block truncate">Outstanding Arrears</span>
+              <span className="text-lg sm:text-xl xl:text-2xl font-black mt-1 block truncate max-w-full tracking-tight" title={`₹${outstandingFeesAggregate.toLocaleString("en-IN")}`}>₹{outstandingFeesAggregate.toLocaleString("en-IN")}</span>
             </div>
-            <p className="text-[10.5px] text-white/75 mt-2">Awaiting parent transaction submissions</p>
+            <p className="text-[10.5px] text-white/75 mt-2 truncate">Awaiting parent transaction submissions</p>
           </div>
           <div className="absolute right-[-10px] bottom-[-10px] text-white/10 transform rotate-12 select-none">
             <TrendingUp className="w-24 h-24" />

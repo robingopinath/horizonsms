@@ -288,19 +288,29 @@ export default function StaffDashboard({
         <div className="lg:col-span-5 grid grid-cols-2 gap-4">
           
           {/* Active Attendance Rate Stat */}
-          <div className="bg-white rounded-[28px] border border-gray-100 p-5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between items-start relative overflow-hidden group">
+          <div className="bg-white rounded-[28px] border border-gray-100 p-5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between items-start relative overflow-hidden group min-w-0">
+            {/* Elegant SVG Emerald Mesh pattern background */}
+            <svg className="absolute inset-0 w-full h-full opacity-[0.05] select-none pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <pattern id="staff-emerald-dots" width="10" height="10" patternUnits="userSpaceOnUse">
+                  <circle cx="2" cy="2" r="1.2" fill="#10B981" />
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#staff-emerald-dots)" />
+            </svg>
+
             <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-bl-full pointer-events-none group-hover:bg-emerald-500/10 transition-colors" />
-            <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
+            <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 shrink-0 relative z-10">
               <Smile className="w-5.5 h-5.5" />
             </div>
             
-            <div className="mt-4 space-y-1">
-              <span className="text-[10px] uppercase font-black text-slate-400 tracking-wider block">Presence Quotient</span>
-              <div className="flex items-baseline gap-1.5">
-                <span className="text-3xl font-black text-slate-800 tracking-tight">{attendanceRate}%</span>
-                <span className="text-emerald-600 text-xs font-black">↑ Good</span>
+            <div className="mt-4 space-y-1 w-full min-w-0 relative z-10">
+              <span className="text-[10px] uppercase font-black text-slate-400 tracking-wider block truncate">Presence Quotient</span>
+              <div className="flex items-baseline gap-1.5 min-w-0">
+                <span className="text-lg sm:text-xl xl:text-2xl font-black text-slate-800 tracking-tight truncate" title={`${attendanceRate}%`}>{attendanceRate}%</span>
+                <span className="text-emerald-600 text-xs font-black shrink-0">↑ Good</span>
               </div>
-              <div className="w-full bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden">
+              <div className="w-full bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden select-none">
                 <div 
                   className="bg-emerald-500 h-1.5 rounded-full transition-all duration-700" 
                   style={{ width: `${attendanceRate}%` }}
@@ -310,9 +320,15 @@ export default function StaffDashboard({
           </div>
 
           {/* Absentees Pulse Card */}
-          <div className="bg-white rounded-[28px] border border-gray-100 p-5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between items-start relative overflow-hidden group">
+          <div className="bg-white rounded-[28px] border border-gray-100 p-5 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between items-start relative overflow-hidden group min-w-0">
+            {/* Elegant SVG Rose Waves pattern background */}
+            <svg className="absolute inset-0 w-full h-full opacity-[0.06] select-none pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 40 Q 50 15, 100 40 T 200 40" fill="none" stroke="#F43F5E" strokeWidth="1" />
+              <path d="M0 50 Q 50 25, 100 50 T 200 50" fill="none" stroke="#F43F5E" strokeWidth="1.5" className="opacity-40" />
+            </svg>
+
             <div className="absolute top-0 right-0 w-24 h-24 bg-rose-500/5 rounded-bl-full pointer-events-none group-hover:bg-rose-500/10 transition-colors" />
-            <div className="w-10 h-10 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 relative">
+            <div className="w-10 h-10 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 relative shrink-0 relative z-10">
               <AlertCircle className="w-5.5 h-5.5" />
               {absentCount > 0 && (
                 <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-rose-500 text-white rounded-full text-[9px] font-black flex items-center justify-center animate-bounce">
@@ -321,13 +337,13 @@ export default function StaffDashboard({
               )}
             </div>
             
-            <div className="mt-4 space-y-1">
-              <span className="text-[10px] uppercase font-black text-slate-400 tracking-wider block">Absences Today</span>
-              <div className="flex items-baseline gap-1.5">
-                <span className="text-3xl font-black text-slate-800 tracking-tight">{absentCount}</span>
-                <span className="text-slate-400 text-xs font-bold">Kids Count</span>
+            <div className="mt-4 space-y-1 w-full min-w-0 relative z-10">
+              <span className="text-[10px] uppercase font-black text-slate-400 tracking-wider block truncate">Absences Today</span>
+              <div className="flex items-baseline gap-1.5 min-w-0">
+                <span className="text-lg sm:text-xl xl:text-2xl font-black text-slate-800 tracking-tight truncate" title={absentCount.toString()}>{absentCount}</span>
+                <span className="text-slate-400 text-xs font-bold shrink-0">Kids Count</span>
               </div>
-              <p className="text-[10px] text-slate-400 font-bold leading-tight">
+              <p className="text-[10px] text-slate-400 font-bold leading-tight truncate">
                 {absentCount > 0 ? "SMS Alerts dispatched to parents" : "Perfect attendance potential"}
               </p>
             </div>

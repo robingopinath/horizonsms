@@ -124,3 +124,17 @@ export interface HomeworkRecord {
   dueDate: string; // YYYY-MM-DD
   postedBy: string; // teacher or admin
 }
+
+export interface Exam {
+  id: string;
+  title: string;
+  course: CourseType;
+  subject: string;
+  examDate: string; // YYYY-MM-DD
+  examTime: string; // HH:MM or AM/PM
+  maxMarks: number;
+  syllabus: string;
+  academicTerm: "Term 1" | "Term 2" | "Final Term";
+  status: "Scheduled" | "Completed" | "Cancelled";
+}
+
